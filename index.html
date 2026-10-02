@@ -19,7 +19,6 @@
       --progress-bg: #e0ded5;
       --progress-fill: #617c6d;
     }
-
     [data-theme="dark"] {
       --bg-color: #121212;
       --card-bg: #1e1e1e;
@@ -33,7 +32,6 @@
       --progress-bg: #333333;
       --progress-fill: #7a9e8c;
     }
-
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", sans-serif; background: var(--bg-color); color: var(--text-main); transition: background 0.3s, color 0.3s; }
     .app { max-width: 650px; margin: auto; min-height: 100vh; background: var(--bg-color); }
@@ -42,8 +40,7 @@
     header h1 { margin: 0; font-size: 19px; font-weight: 700; }
     .sync-status { font-size: 11px; opacity: .8; margin-top: 3px; }
     .theme-btn { background: rgba(255,255,255,0.2); border: none; color: white; padding: 6px 12px; border-radius: 20px; font-size: 14px; cursor: pointer; }
-
-    /* 即時換算區塊 */
+    
     .currency { background: var(--card-bg); margin: 14px; padding: 16px 18px; border-radius: 18px; box-shadow: 0 4px 16px rgba(0,0,0,.06); border: 1px solid var(--border-color); }
     .currency-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 14px; font-weight: bold; color: var(--text-main); }
     .currency-row { display: flex; gap: 10px; align-items: center; }
@@ -51,12 +48,10 @@
     .currency input:focus { border-color: var(--primary-light); }
     .currency-arrow { font-size: 18px; color: var(--text-sub); font-weight: bold; }
     
-    /* Tab 選單 */
     .tabs { display: flex; background: var(--card-bg); border-bottom: 2px solid var(--border-color); position: sticky; top: 62px; z-index: 15; box-shadow: 0 2px 8px rgba(0,0,0,.03); overflow-x: auto; }
     .tab { flex: 1; min-width: 80px; text-align: center; padding: 12px 4px; font-size: 14px; font-weight: 600; color: var(--text-sub); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; transition: all 0.2s; white-space: nowrap; }
     .tab.active { color: var(--primary-light); font-weight: 800; border-bottom: 3px solid var(--primary-light); background: rgba(97, 124, 109, 0.05); }
     .tab-icon { font-size: 16px; }
-
     .page { display: none; padding: 14px; padding-bottom: 100px; }
     .page.active { display: block; }
     
@@ -64,8 +59,7 @@
     .total-label { color: var(--text-sub); font-size: 13px; }
     .total-hkd { font-size: 36px; font-weight: 800; margin-top: 4px; color: var(--text-main); }
     .total-jpy { font-size: 15px; color: var(--text-sub); margin-top: 2px; }
-
-    /* 預算進度條樣式 */
+    
     .budget-section { margin-top: 14px; padding-top: 10px; border-top: 1px dashed var(--border-color); }
     .budget-title { display: flex; justify-content: space-between; font-size: 13px; font-weight: bold; margin-bottom: 6px; }
     .budget-bar-bg { width: 100%; height: 12px; background: var(--progress-bg); border-radius: 10px; overflow: hidden; }
@@ -90,8 +84,7 @@
     .record-actions { margin-top: 8px; display: flex; gap: 14px; font-size: 12px; }
     .edit-btn { color: var(--primary-light); font-weight: bold; cursor: pointer; }
     .delete-btn { color: #e53935; cursor: pointer; }
-
-    /* 時間軸 Timeline 設計 */
+    
     .timeline { position: relative; padding-left: 20px; margin-top: 10px; }
     .timeline::before { content: ''; position: absolute; left: 6px; top: 12px; bottom: 12px; width: 2px; background: var(--border-color); }
     .timeline-item { position: relative; margin-bottom: 16px; }
@@ -101,11 +94,9 @@
     .timeline-time { font-size: 14px; font-weight: 800; color: var(--primary-light); background: rgba(97, 124, 109, 0.1); padding: 2px 8px; border-radius: 6px; }
     .timeline-title { font-size: 15px; font-weight: bold; color: var(--text-main); margin-top: 4px; }
     .timeline-location { font-size: 13px; color: var(--text-sub); margin-top: 6px; line-height: 1.4; white-space: pre-line; }
-
     .settlement-card { background: var(--accent-card); border: 1px dashed var(--primary-light); border-radius: 18px; padding: 18px; margin-top: 16px; }
     .settlement-title { font-size: 15px; font-weight: bold; color: var(--primary-light); margin-bottom: 8px; }
     .settlement-text { font-size: 14px; color: var(--text-main); font-weight: 500; }
-
     .fab { position: fixed; right: 20px; bottom: 22px; width: 62px; height: 62px; border-radius: 50%; background: var(--primary); color: white; border: none; font-size: 32px; box-shadow: 0 5px 18px rgba(0,0,0,.3); z-index: 30; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .empty { text-align: center; color: var(--text-sub); padding: 40px 10px; font-size: 14px; }
     
@@ -128,7 +119,6 @@
     .cat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
     .cat-chip { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 12px 4px; text-align: center; font-size: 13px; cursor: pointer; }
     .cat-chip.selected { background: var(--primary); color: white; border-color: var(--primary); font-weight: bold; }
-
     .two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .people { display: flex; gap: 8px; }
     .choice { flex: 1; border: 1px solid var(--border-color); background: var(--card-bg); border-radius: 11px; padding: 11px; text-align: center; cursor: pointer; }
@@ -137,7 +127,6 @@
   </style>
 </head>
 <body>
-
 <div class="app">
   <header>
     <div>
@@ -147,7 +136,6 @@
     <button class="theme-btn" onclick="toggleTheme()">🌙 / ☀️</button>
   </header>
 
-  <!-- 即時換算區 -->
   <div class="currency">
     <div class="currency-header">
       <span>💴 即時匯率換算</span>
@@ -162,7 +150,6 @@
     </div>
   </div>
 
-  <!-- Tab 選單 -->
   <div class="tabs">
     <div class="tab active" onclick="showPage('summary', this)"><span class="tab-icon">🏠</span>總覽</div>
     <div class="tab" onclick="showPage('schedule', this)"><span class="tab-icon">📅</span>行程表</div>
@@ -171,13 +158,11 @@
     <div class="tab" onclick="showPage('stats', this)"><span class="tab-icon">📊</span>圖表</div>
   </div>
 
-  <!-- 頁面 1：總覽 -->
   <section id="summary" class="page active">
     <div class="card">
       <div class="total-label">全行程總支出</div>
       <div class="total-hkd" id="totalHKD">HK$0.00</div>
       <div class="total-jpy" id="totalJPY">¥0</div>
-
       <div class="budget-section">
         <div class="budget-title">
           <span>🎯 每人預算目標 (HK$10,000)</span>
@@ -197,14 +182,12 @@
         <div class="mini"><div class="mini-label">Cherry 已付</div><div class="mini-value" id="cherryPaid">HK$0.00</div></div>
       </div>
     </div>
-
     <div class="settlement-card">
       <div class="settlement-title">🤝 旅程結算帳單</div>
       <div class="settlement-text" id="settlement">計算中...</div>
     </div>
   </section>
 
-  <!-- 頁面 2：行程時間表 -->
   <section id="schedule" class="page">
     <div class="day-filter">
       <button class="day-btn active" onclick="filterSchedule('Day 1', this)">Day 1</button>
@@ -216,19 +199,17 @@
     <div id="scheduleList"></div>
   </section>
 
-  <!-- 頁面 3：必去景點 / 食店筆記牆 -->
   <section id="notes" class="page">
     <div class="day-filter">
       <button class="day-btn active" onclick="filterNotes('ALL', this)">全部</button>
       <button class="day-btn" onclick="filterNotes('🍜 美食', this)">🍜 美食</button>
-      <button class="day-btn" onclick="filterNotes('🛍️ 必買', this)">🛍️️ 必買</button>
+      <button class="day-btn" onclick="filterNotes('🛍️ 必買', this)">🛍️ 必買</button>
       <button class="day-btn" onclick="filterNotes('🎫 景點', this)">🎫 景點</button>
       <button class="day-btn" onclick="filterNotes('📝 筆記', this)">📝 筆記</button>
     </div>
     <div id="notesList"></div>
   </section>
 
-  <!-- 頁面 4：明細紀錄 -->
   <section id="records" class="page">
     <div class="day-filter">
       <button class="day-btn active" onclick="filterByDay('ALL', this)">全部</button>
@@ -243,7 +224,6 @@
     <div id="recordList"></div>
   </section>
 
-  <!-- 頁面 5：圖表統計 -->
   <section id="stats" class="page">
     <div class="card">
       <div class="section-title">📊 分類比例圓餅圖</div>
@@ -283,11 +263,11 @@
     <div class="cat-grid" id="catGrid">
       <div class="cat-chip selected" onclick="selectCat('🍜 食物', this)">🍜 食物</div>
       <div class="cat-chip" onclick="selectCat('☕ 飲品', this)">☕ 飲品</div>
-      <div class="cat-chip" onclick="selectCat('🛍 購物', this)">🛍️ 購物</div>
+      <div class="cat-chip" onclick="selectCat('🛍️ 購物', this)">🛍️ 購物</div>
       <div class="cat-chip" onclick="selectCat('🚆 交通', this)">🚆 交通</div>
       <div class="cat-chip" onclick="selectCat('🏨 住宿', this)">🏨 住宿</div>
       <div class="cat-chip" onclick="selectCat('🎫 景點', this)">🎫 景點</div>
-      <div class="cat-chip" onclick="selectCat('✈️ 機票', this)">✈ 機票</div>
+      <div class="cat-chip" onclick="selectCat('✈️ 機票', this)">✈️ 機票</div>
       <div class="cat-chip" onclick="selectCat('📦 其他', this)">📦 其他</div>
     </div>
     <div class="two">
@@ -343,12 +323,12 @@
 <!-- 備忘/必去 Modal -->
 <div class="modal-bg" id="modalNote">
   <div class="modal">
-    <div class="modal-header"><h2>新增口袋名單 / 筆記</h2><div class="close" onclick="closeModal('modalNote')">×</div></div>
+    <div class="modal-header"><h2 id="noteModalTitle">新增口袋名單 / 筆記</h2><div class="close" onclick="closeModal('modalNote')">×</div></div>
     <input type="hidden" id="noteId" value="">
     <label>類別</label>
     <select id="noteCat">
       <option value="🍜 美食">🍜 美食</option>
-      <option value="🛍️ 必買">🛍️ 必買</option>
+      <option value="🛍️ 必買">🛍️️ 必買</option>
       <option value="🎫 景點">🎫 景點</option>
       <option value="📝 筆記">📝 筆記</option>
     </select>
@@ -363,12 +343,10 @@
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycbyGC_wo7E5jVk-O-GVd_38BLGn6r13uxMKy265hyOt6SjeGwv4WdK-3EDE_LwBa4efpEw/exec';
 const TARGET_PER_PERSON = 10000;
-
 let currentPage = 'summary';
 let expenses = [];
 let schedules = [];
 let notesList = [];
-
 let selectedPerson = 'Walter';
 let selectedCategory = '🍜 食物';
 let currentDayFilter = 'ALL';
@@ -437,8 +415,7 @@ function openExpenseModal(data = null) {
     let cleanNote = data.note || '';
     cleanNote = cleanNote.replace(/\[.*?\]\s*/, '');
     document.getElementById('note').value = cleanNote;
-
-    // 選擇對應的誰付款
+    
     const personBtns = document.querySelectorAll('.choice');
     personBtns.forEach(btn => {
       if (btn.dataset.person === data.person) {
@@ -462,6 +439,7 @@ function editExpense(id) {
   if (item) openExpenseModal(item);
 }
 
+// 修正：補上 schId 賦值，修復編輯行程 Bug
 function openScheduleModal(data = null) {
   if (data) {
     document.getElementById('schModalTitle').innerText = '編輯行程';
@@ -486,11 +464,26 @@ function editSchedule(id) {
   if (item) openScheduleModal(item);
 }
 
-function openNoteModal() {
-  document.getElementById('noteId').value = '';
-  document.getElementById('noteTitle').value = '';
-  document.getElementById('noteRemark').value = '';
+// 修正：補上筆記編輯功能
+function openNoteModal(data = null) {
+  if (data) {
+    document.getElementById('noteModalTitle').innerText = '編輯口袋名單 / 筆記';
+    document.getElementById('noteId').value = data.id;
+    document.getElementById('noteCat').value = data.cat;
+    document.getElementById('noteTitle').value = data.title;
+    document.getElementById('noteRemark').value = data.remark || '';
+  } else {
+    document.getElementById('noteModalTitle').innerText = '新增口袋名單 / 筆記';
+    document.getElementById('noteId').value = '';
+    document.getElementById('noteTitle').value = '';
+    document.getElementById('noteRemark').value = '';
+  }
   document.getElementById('modalNote').classList.add('show');
+}
+
+function editNoteItem(id) {
+  const item = notesList.find(n => n.id === id);
+  if (item) openNoteModal(item);
 }
 
 function closeModal(id) { document.getElementById(id).classList.remove('show'); }
@@ -554,18 +547,17 @@ function loadLocalStorage() {
 }
 
 async function syncWithServer() {
-  document.getElementById('syncStatus').innerText = '☁ 同步中...';
+  document.getElementById('syncStatus').innerText = '☁️ 同步中...';
   try {
     const res = await fetch(API_URL);
     const data = await res.json();
     if (data.expenses) expenses = data.expenses;
     if (data.schedules) schedules = data.schedules;
     if (data.notes) notesList = data.notes;
-
+    
     localStorage.setItem('japan_expenses', JSON.stringify(expenses));
     localStorage.setItem('japan_schedules', JSON.stringify(schedules));
     localStorage.setItem('japan_notes', JSON.stringify(notesList));
-
     renderAll();
     document.getElementById('syncStatus').innerText = '☁️ 已最新同步 · ' + new Date().toLocaleTimeString('zh-HK', { hour: '2-digit', minute: '2-digit' });
   } catch (err) {
@@ -573,22 +565,28 @@ async function syncWithServer() {
   }
 }
 
-/* 儲存資料與同步 */
+/* 儲存資料與發送 POST */
+async function postData(payload) {
+  // 移除 mode: 'no-cors' 以防靜默失敗
+  return fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload)
+  });
+}
+
 async function saveExpense() {
   const amount = Number(document.getElementById('amount').value);
   if (!amount || amount <= 0) return alert('請輸入金額');
-
   const editId = document.getElementById('editId').value;
   const currency = document.getElementById('currencyType').value;
   const rate = Number(document.getElementById('itemRate').value) || 0.0497;
   
-  // 日圓四捨五入成整數，港幣保留兩位小數
   const jpy = (currency === 'JPY') ? Math.round(amount) : Math.round(amount / rate);
   const hkd = (currency === 'JPY') ? Number((amount * rate).toFixed(2)) : Number(amount.toFixed(2));
   
   const dayTag = document.getElementById('dayTag').value;
   const noteRaw = document.getElementById('note').value.trim();
-
   const data = {
     action: 'saveExpense',
     id: editId || ('local_' + Date.now()),
@@ -612,10 +610,10 @@ async function saveExpense() {
   localStorage.setItem('japan_expenses', JSON.stringify(expenses));
   renderAll();
   closeModal('modalExpense');
-
+  
   document.getElementById('syncStatus').innerText = '☁️ 正在同步支出...';
   try {
-    await fetch(API_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+    await postData(data);
     document.getElementById('syncStatus').innerText = '☁️ 已同步至 Google Sheet';
   } catch (e) { document.getElementById('syncStatus').innerText = '⚠️ 同步失敗 (已存本機)'; }
 }
@@ -623,7 +621,6 @@ async function saveExpense() {
 async function saveSchedule() {
   const title = document.getElementById('schTitle').value.trim();
   if (!title) return alert('請輸入行程名稱');
-
   const editId = document.getElementById('schId').value;
   const data = {
     action: 'saveSchedule',
@@ -648,7 +645,7 @@ async function saveSchedule() {
 
   document.getElementById('syncStatus').innerText = '☁️ 正在同步行程...';
   try {
-    await fetch(API_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+    await postData(data);
     document.getElementById('syncStatus').innerText = '☁️ 已同步至 Google Sheet';
   } catch (e) { document.getElementById('syncStatus').innerText = '⚠️ 同步失敗 (已存本機)'; }
 }
@@ -656,7 +653,6 @@ async function saveSchedule() {
 async function saveNoteItem() {
   const title = document.getElementById('noteTitle').value.trim();
   if (!title) return alert('請輸入名稱');
-
   const editId = document.getElementById('noteId').value;
   const data = {
     action: 'saveNote',
@@ -679,7 +675,7 @@ async function saveNoteItem() {
 
   document.getElementById('syncStatus').innerText = '☁️ 正在同步筆記...';
   try {
-    await fetch(API_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+    await postData(data);
     document.getElementById('syncStatus').innerText = '☁️ 已同步至 Google Sheet';
   } catch (e) { document.getElementById('syncStatus').innerText = '⚠️ 同步失敗 (已存本機)'; }
 }
@@ -690,10 +686,8 @@ async function deleteExpense(id) {
   expenses = expenses.filter(e => e.id !== id);
   localStorage.setItem('japan_expenses', JSON.stringify(expenses));
   renderAll();
-  
-  // 發送同步刪除 request
   try {
-    await fetch(API_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'delete', target: 'expense', id: id }) });
+    await postData({ action: 'delete', target: 'expense', id: id });
   } catch(e){}
 }
 
@@ -702,9 +696,8 @@ async function deleteSchedule(id) {
   schedules = schedules.filter(s => s.id !== id);
   localStorage.setItem('japan_schedules', JSON.stringify(schedules));
   renderSchedule();
-
   try {
-    await fetch(API_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'delete', target: 'schedule', id: id }) });
+    await postData({ action: 'delete', target: 'schedule', id: id });
   } catch(e){}
 }
 
@@ -713,9 +706,8 @@ async function deleteNoteItem(id) {
   notesList = notesList.filter(n => n.id !== id);
   localStorage.setItem('japan_notes', JSON.stringify(notesList));
   renderNotes();
-
   try {
-    await fetch(API_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'delete', target: 'note', id: id }) });
+    await postData({ action: 'delete', target: 'note', id: id });
   } catch(e){}
 }
 
@@ -755,20 +747,19 @@ function renderSummary() {
     if (e.person === 'Walter') walter += Number(e.hkd || 0);
     if (e.person === 'Cherry') cherry += Number(e.hkd || 0);
   });
-
   document.getElementById('totalHKD').innerText = `HK$${formatNumber(totalHKD)}`;
   document.getElementById('totalJPY').innerText = `¥${Math.round(totalJPY).toLocaleString()}`;
   document.getElementById('walterPaid').innerText = `HK$${formatNumber(walter)}`;
   document.getElementById('cherryPaid').innerText = `HK$${formatNumber(cherry)}`;
-
+  
   const perPerson = totalHKD / 2;
   const percent = Math.min((perPerson / TARGET_PER_PERSON) * 100, 100);
   const remaining = TARGET_PER_PERSON - perPerson;
-
+  
   document.getElementById('perPersonSpent').innerText = `人均 HK$${formatNumber(perPerson)}`;
   const barFill = document.getElementById('budgetBarFill');
   barFill.style.width = `${percent}%`;
-
+  
   const infoEl = document.getElementById('budgetInfo');
   if (remaining >= 0) {
     infoEl.innerText = `剩餘 HK$${formatNumber(remaining)} / 人 (${percent.toFixed(1)}%)`;
@@ -777,7 +768,7 @@ function renderSummary() {
     infoEl.innerText = `⚠️ 已超支 HK$${formatNumber(Math.abs(remaining))} / 人 (${percent.toFixed(1)}%)`;
     barFill.style.backgroundColor = '#e53935';
   }
-
+  
   const diff = walter - perPerson;
   const settlementEl = document.getElementById('settlement');
   if (Math.abs(diff) < 0.01) {
@@ -792,11 +783,8 @@ function renderSummary() {
 function renderSchedule() {
   const container = document.getElementById('scheduleList');
   const list = schedules.filter(s => s.day === currentSchFilter);
-
   if (!list.length) return container.innerHTML = '<div class="empty">此天數暫無行程安排，點擊右下角「+」即可新增！</div>';
-
-  list.sort((a,b) => a.time.localeCompare(b.time));
-
+  list.sort((a,b) => String(a.time).localeCompare(String(b.time)));
   let html = '<div class="timeline">';
   html += list.map(s => `
     <div class="timeline-item">
@@ -815,7 +803,6 @@ function renderSchedule() {
     </div>
   `).join('');
   html += '</div>';
-
   container.innerHTML = html;
 }
 
@@ -825,9 +812,7 @@ function renderNotes() {
   if (currentNoteFilter !== 'ALL') {
     list = notesList.filter(n => n.cat === currentNoteFilter);
   }
-
   if (!list.length) return container.innerHTML = '<div class="empty">暫無口袋名單或筆記，點擊右下角「+」新增！</div>';
-
   container.innerHTML = list.map(n => `
     <div class="record">
       <div class="record-top">
@@ -835,7 +820,8 @@ function renderNotes() {
       </div>
       <div class="record-meta">${n.remark || '暫無詳細內容'}</div>
       <div class="record-actions">
-        <span class="delete-btn" onclick="deleteNoteItem('${n.id}')">🗑 刪除</span>
+        <span class="edit-btn" onclick="editNoteItem('${n.id}')">✏️ 編輯</span>
+        <span class="delete-btn" onclick="deleteNoteItem('${n.id}')">🗑️ 刪除</span>
       </div>
     </div>
   `).join('');
@@ -847,12 +833,9 @@ function renderRecords() {
   if (currentDayFilter !== 'ALL') {
     list = expenses.filter(e => e.kind === currentDayFilter || (e.note && e.note.includes(`[${currentDayFilter}]`)));
   }
-
   const dayTotal = list.reduce((s, e) => s + Number(e.hkd || 0), 0);
   document.getElementById('daySummary').innerText = `${currentDayFilter === 'ALL' ? '全部' : currentDayFilter} 共 ${list.length} 筆，小計 HK$${formatNumber(dayTotal)}`;
-
   if (!list.length) return container.innerHTML = '<div class="empty">此天數暫無紀錄</div>';
-
   container.innerHTML = list.map(e => `
     <div class="record">
       <div class="record-top">
@@ -874,12 +857,9 @@ function renderRecords() {
 function renderChart() {
   const cats = {};
   expenses.forEach(e => cats[e.cat] = (cats[e.cat] || 0) + Number(e.hkd || 0));
-
   const labels = Object.keys(cats);
   const series = Object.values(cats);
-
   if (categoryChart) categoryChart.destroy();
-
   const options = {
     series: series,
     labels: labels,
@@ -887,7 +867,6 @@ function renderChart() {
     legend: { position: 'bottom' },
     dataLabels: { enabled: true, formatter: (val) => val.toFixed(0) + '%' }
   };
-
   categoryChart = new ApexCharts(document.querySelector("#chartCategory"), options);
   categoryChart.render();
 }
