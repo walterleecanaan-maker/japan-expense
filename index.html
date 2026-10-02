@@ -66,7 +66,7 @@
     .total-hkd { font-size: 38px; font-weight: 800; margin-top: 4px; color: var(--text-main); }
     .total-jpy { font-size: 15px; color: var(--text-sub); margin-top: 2px; }
 
-    /* 🎯 預算進度條樣式 */
+    /* 預算進度條樣式 */
     .budget-section { margin-top: 14px; pt: 10px; border-top: 1px dashed var(--border-color); }
     .budget-title { display: flex; justify-content: space-between; font-size: 13px; font-weight: bold; margin-bottom: 6px; }
     .budget-bar-bg { width: 100%; height: 12px; background: var(--progress-bg); border-radius: 10px; overflow: hidden; }
@@ -88,7 +88,11 @@
     .record-note { font-weight: 700; font-size: 15px; }
     .record-amount { font-weight: 800; font-size: 17px; }
     .record-meta { margin-top: 6px; color: var(--text-sub); font-size: 12px; line-height: 1.6; }
-    .delete { margin-top: 6px; color: #e53935; font-size: 12px; cursor: pointer; display: inline-block; }
+    
+    /* 🛠️ 操作按鈕：編輯與刪除 */
+    .record-actions { margin-top: 8px; display: flex; gap: 14px; font-size: 12px; }
+    .edit-btn { color: var(--primary-light); font-weight: bold; cursor: pointer; }
+    .delete-btn { color: #e53935; cursor: pointer; }
     
     .settlement-card { background: var(--accent-card); border: 1px dashed var(--primary-light); border-radius: 18px; padding: 18px; margin-top: 16px; }
     .settlement-title { font-size: 15px; font-weight: bold; color: var(--primary-light); margin-bottom: 8px; }
@@ -173,7 +177,6 @@
       <div class="total-hkd" id="totalHKD">HK$0.00</div>
       <div class="total-jpy" id="totalJPY">¥0</div>
 
-      <!-- 🎯 每人 $10,000 預算監控進度條 -->
       <div class="budget-section">
         <div class="budget-title">
           <span>🎯 每人預算目標 (HK$10,000)</span>
@@ -227,11 +230,13 @@
 
 <button class="fab" onclick="openModal()">+</button>
 
-<!-- 新增支出 Modal -->
+<!-- 新增/編輯支出 Modal -->
 <div class="modal-bg" id="modalBg">
   <div class="modal">
-    <div class="modal-header"><h2>新增支出</h2><div class="close" onclick="closeModal()">×</div></div>
+    <div class="modal-header"><h2 id="modalTitle">新增支出</h2><div class="close" onclick="closeModal()">×</div></div>
     
+    <input type="hidden" id="editId" value="">
+
     <label>金額與快捷稅率</label>
     <div class="amount-box">
       <div class="amount-row">
@@ -257,7 +262,7 @@
     <div class="cat-grid" id="catGrid">
       <div class="cat-chip selected" onclick="selectCat('🍜 食物', this)">🍜 食物</div>
       <div class="cat-chip" onclick="selectCat('☕ 飲品', this)">☕ 飲品</div>
-      <div class="cat-chip" onclick="selectCat('🛍️️ 購物', this)">🛍️ 購物</div>
+      <div class="cat-chip" onclick="selectCat('🛍 購物', this)">🛍️ 購物</div>
       <div class="cat-chip" onclick="selectCat('🚆 交通', this)">🚆 交通</div>
       <div class="cat-chip" onclick="selectCat('🏨 住宿', this)">🏨 住宿</div>
       <div class="cat-chip" onclick="selectCat('🎫 景點', this)">🎫 景點</div>
@@ -305,7 +310,7 @@
 
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycbyGC_wo7E5jVk-O-GVd_38BLGn6r13uxMKy265hyOt6SjeGwv4WdK-3EDE_LwBa4efpEw/exec';
-const TARGET_PER_PERSON = 10000; // 每人目標預算 HKD 10,000
+const TARGET_PER_PERSON = 10000;
 
 let expenses = [];
 let selectedPerson = 'Walter';
@@ -368,14 +373,68 @@ function calcFromHKD() {
 }
 
 function openModal() {
+  document.getElementById('editId').value = '';
+  document.getElementById('modalTitle').innerText = '新增支出';
   document.getElementById('modalBg').classList.add('show');
   const now = new Date();
   document.getElementById('date').value = now.toISOString().split('T')[0];
   document.getElementById('itemRate').value = document.getElementById('baseRate').value;
+  document.getElementById('amount').value = '';
+  document.getElementById('note').value = '';
   updateConversion();
 }
 
 function closeModal() { document.getElementById('modalBg').classList.remove('show'); }
+
+function editRecord(id) {
+  const item = expenses.find(e => e.id === id);
+  if (!item) return;
+
+  document.getElementById('editId').value = item.id;
+  document.getElementById('modalTitle').innerText = '編輯支出';
+
+  document.getElementById('amount').value = Math.round(item.jpy);
+  document.getElementById('currencyType').value = 'JPY';
+  
+  const baseRate = Number(document.getElementById('baseRate').value) || 0.0497;
+  const calcRate = item.jpy ? (item.hkd / item.jpy).toFixed(4) : baseRate;
+  document.getElementById('itemRate').value = calcRate;
+
+  let rawNote = item.note || '';
+  if (rawNote.startsWith('[')) {
+    const splitNote = rawNote.split('] ');
+    if (splitNote.length > 1) {
+      document.getElementById('dayTag').value = splitNote[0].replace('[', '');
+      document.getElementById('note').value = splitNote.slice(1).join('] ');
+    } else {
+      document.getElementById('note').value = rawNote;
+    }
+  } else {
+    document.getElementById('note').value = rawNote;
+  }
+
+  document.getElementById('date').value = item.date || new Date().toISOString().split('T')[0];
+  document.getElementById('paymentMethod').value = item.pay || '💴 Cash (現金)';
+
+  // 分類選擇
+  const catChips = document.querySelectorAll('.cat-chip');
+  catChips.forEach(chip => {
+    if (chip.innerText.trim() === item.cat) {
+      selectCat(item.cat, chip);
+    }
+  });
+
+  // 人員選擇
+  const peopleChoices = document.querySelectorAll('.choice');
+  peopleChoices.forEach(choice => {
+    if (choice.dataset.person === item.person) {
+      selectPerson(choice);
+    }
+  });
+
+  updateConversion();
+  document.getElementById('modalBg').classList.add('show');
+}
 
 function applyTax(factor) {
   const amountEl = document.getElementById('amount');
@@ -435,6 +494,7 @@ async function saveExpense() {
 
   if (navigator.vibrate) navigator.vibrate(50);
 
+  const editId = document.getElementById('editId').value;
   const currency = document.getElementById('currencyType').value;
   const rate = Number(document.getElementById('itemRate').value) || 0.0497;
   const jpy = (currency === 'JPY') ? amount : (amount / rate);
@@ -445,7 +505,7 @@ async function saveExpense() {
   const fullNote = `[${dayTag}] ${noteRaw}`;
 
   const data = {
-    id: 'local_' + Date.now(),
+    id: editId || ('local_' + Date.now()),
     date: document.getElementById('date').value,
     time: new Date().toTimeString().substring(0, 5),
     jpy, hkd,
@@ -456,16 +516,22 @@ async function saveExpense() {
     note: fullNote
   };
 
-  expenses.unshift(data);
+  if (editId) {
+    // 編輯舊紀錄
+    const idx = expenses.findIndex(e => e.id === editId);
+    if (idx !== -1) expenses[idx] = data;
+  } else {
+    // 新增紀錄
+    expenses.unshift(data);
+  }
+
   localStorage.setItem('japan_expenses', JSON.stringify(expenses));
   renderAll();
   closeModal();
 
-  document.getElementById('amount').value = '';
-  document.getElementById('note').value = '';
-
   try {
-    await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'add', data }) });
+    const action = editId ? 'edit' : 'add';
+    await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action, data }) });
     syncWithServer();
   } catch (e) {}
 }
@@ -508,7 +574,6 @@ function renderSummary() {
   document.getElementById('walterPaid').innerText = `HK$${formatNumber(walter)}`;
   document.getElementById('cherryPaid').innerText = `HK$${formatNumber(cherry)}`;
 
-  // 🎯 計算每人平均支出與進度條
   const perPerson = totalHKD / 2;
   const percent = Math.min((perPerson / TARGET_PER_PERSON) * 100, 100);
   const remaining = TARGET_PER_PERSON - perPerson;
@@ -526,7 +591,6 @@ function renderSummary() {
     barFill.style.backgroundColor = '#e53935';
   }
 
-  // 結算帳單
   const diff = walter - perPerson;
   const settlementEl = document.getElementById('settlement');
   if (Math.abs(diff) < 0.01) {
@@ -561,7 +625,10 @@ function renderRecords() {
         ¥${Math.round(e.jpy).toLocaleString()} · ${e.cat} · ${e.pay}<br>
         ${e.person} 付款 · ${e.date}
       </div>
-      <div class="delete" onclick="deleteRecord('${e.id}')">🗑️ 刪除</div>
+      <div class="record-actions">
+        <span class="edit-btn" onclick="editRecord('${e.id}')">✏️ 編輯</span>
+        <span class="delete-btn" onclick="deleteRecord('${e.id}')">🗑️ 刪除</span>
+      </div>
     </div>
   `).join('');
 }
