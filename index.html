@@ -1,115 +1,149 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-HK">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Walter & Cherry｜日本旅行記帳</title>
+  <title>Walter & Cherry｜日本旅行記帳 🇯🇵</title>
+  <!-- 載入專業圖表庫 ApexCharts -->
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
   <style>
+    :root {
+      --bg-color: #f6f4ef;
+      --card-bg: #ffffff;
+      --text-main: #333333;
+      --text-sub: #777777;
+      --primary: #263b32;
+      --primary-light: #617c6d;
+      --border-color: #e5e2d9;
+      --input-bg: #ffffff;
+      --accent-card: #f0f4f1;
+    }
+
+    [data-theme="dark"] {
+      --bg-color: #121212;
+      --card-bg: #1e1e1e;
+      --text-main: #e0e0e0;
+      --text-sub: #aaaaaa;
+      --primary: #4e7362;
+      --primary-light: #7a9e8c;
+      --border-color: #333333;
+      --input-bg: #2a2a2a;
+      --accent-card: #1c2822;
+    }
+
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", sans-serif; background: #f6f4ef; color: #333; }
-    .app { max-width: 650px; margin: auto; min-height: 100vh; background: #f6f4ef; }
-    header { background: #263b32; color: white; padding: 22px 20px 18px; position: sticky; top: 0; z-index: 20; }
-    header h1 { margin: 0; font-size: 20px; font-weight: 700; }
-    header p { margin: 4px 0 0; font-size: 12px; opacity: .75; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", sans-serif; background: var(--bg-color); color: var(--text-main); transition: background 0.3s, color 0.3s; }
+    .app { max-width: 650px; margin: auto; min-height: 100vh; background: var(--bg-color); }
     
-    .currency { background: white; margin: 12px 14px; padding: 14px 16px; border-radius: 16px; box-shadow: 0 3px 12px rgba(0,0,0,.05); }
-    .currency-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 13px; color: #666; }
+    header { background: var(--primary); color: white; padding: 18px 20px 14px; position: sticky; top: 0; z-index: 20; display: flex; justify-content: space-between; align-items: center; }
+    header h1 { margin: 0; font-size: 19px; font-weight: 700; }
+    header p { margin: 3px 0 0; font-size: 11px; opacity: .8; }
+    .theme-btn { background: rgba(255,255,255,0.2); border: none; color: white; padding: 6px 10px; border-radius: 20px; font-size: 13px; cursor: pointer; }
+
+    .currency { background: var(--card-bg); margin: 12px 14px; padding: 14px 16px; border-radius: 16px; box-shadow: 0 3px 12px rgba(0,0,0,.04); border: 1px solid var(--border-color); }
+    .currency-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 12px; color: var(--text-sub); }
     .currency-row { display: flex; gap: 8px; align-items: center; }
-    .currency input { width: 100%; border: 1px solid #ddd; border-radius: 10px; padding: 10px; font-size: 16px; }
+    .currency input { width: 100%; border: 1px solid var(--border-color); border-radius: 10px; padding: 10px; font-size: 16px; background: var(--input-bg); color: var(--text-main); }
     
-    .tabs { display: flex; background: white; border-bottom: 1px solid #eee; position: sticky; top: 72px; z-index: 15; }
-    .tab { flex: 1; text-align: center; padding: 13px 4px; font-size: 14px; color: #888; cursor: pointer; }
-    .tab.active { color: #263b32; font-weight: bold; border-bottom: 3px solid #263b32; }
+    .tabs { display: flex; background: var(--card-bg); border-bottom: 1px solid var(--border-color); position: sticky; top: 62px; z-index: 15; }
+    .tab { flex: 1; text-align: center; padding: 12px 4px; font-size: 14px; color: var(--text-sub); cursor: pointer; }
+    .tab.active { color: var(--primary-light); font-weight: bold; border-bottom: 3px solid var(--primary-light); }
     
     .page { display: none; padding: 14px; padding-bottom: 100px; }
     .page.active { display: block; }
     
-    .card { background: white; border-radius: 18px; padding: 18px; margin-bottom: 14px; box-shadow: 0 3px 12px rgba(0,0,0,.04); }
-    .total-label { color: #888; font-size: 13px; }
-    .total-hkd { font-size: 36px; font-weight: 800; margin-top: 4px; color: #263b32; }
-    .total-jpy { font-size: 15px; color: #888; margin-top: 2px; }
+    .card { background: var(--card-bg); border-radius: 18px; padding: 18px; margin-bottom: 14px; box-shadow: 0 3px 12px rgba(0,0,0,.04); border: 1px solid var(--border-color); }
+    .total-label { color: var(--text-sub); font-size: 12px; }
+    .total-hkd { font-size: 36px; font-weight: 800; margin-top: 4px; color: var(--text-main); }
+    .total-jpy { font-size: 14px; color: var(--text-sub); margin-top: 2px; }
     
     .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .mini { background: #f8f8f8; border-radius: 13px; padding: 13px; }
-    .mini-label { font-size: 12px; color: #888; margin-bottom: 5px; }
-    .mini-value { font-size: 17px; font-weight: 700; color: #263b32; }
+    .mini { background: var(--bg-color); border-radius: 13px; padding: 12px; }
+    .mini-label { font-size: 12px; color: var(--text-sub); margin-bottom: 4px; }
+    .mini-value { font-size: 16px; font-weight: 700; color: var(--text-main); }
     
-    /* 天數篩選列 */
-    .day-filter { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 10px; -webkit-overflow-scrolling: touch; }
-    .day-btn { flex: 0 0 auto; padding: 8px 14px; background: #e8e6e1; border-radius: 20px; font-size: 13px; color: #555; cursor: pointer; border: none; }
-    .day-btn.active { background: #263b32; color: white; font-weight: bold; }
+    .day-filter { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 10px; -webkit-overflow-scrolling: touch; }
+    .day-btn { flex: 0 0 auto; padding: 7px 14px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; font-size: 12px; color: var(--text-sub); cursor: pointer; }
+    .day-btn.active { background: var(--primary); color: white; border-color: var(--primary); font-weight: bold; }
     
-    .section-title { font-size: 15px; font-weight: 700; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-    .record { background: white; border-radius: 16px; padding: 15px; margin-bottom: 10px; box-shadow: 0 2px 9px rgba(0,0,0,.04); }
+    .section-title { font-size: 14px; font-weight: 700; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+    .record { background: var(--card-bg); border-radius: 16px; padding: 14px; margin-bottom: 10px; border: 1px solid var(--border-color); }
     .record-top { display: flex; justify-content: space-between; align-items: flex-start; }
     .record-note { font-weight: 700; font-size: 15px; }
-    .record-amount { font-weight: 800; color: #263b32; font-size: 17px; }
-    .record-meta { margin-top: 7px; color: #888; font-size: 12px; line-height: 1.7; }
-    .delete { margin-top: 8px; color: #b55; font-size: 12px; cursor: pointer; display: inline-block; }
+    .record-amount { font-weight: 800; font-size: 16px; }
+    .record-meta { margin-top: 6px; color: var(--text-sub); font-size: 12px; line-height: 1.6; }
+    .delete { margin-top: 6px; color: #e53935; font-size: 12px; cursor: pointer; display: inline-block; }
     
-    /* 清算小幫手 (收納在底部) */
-    .settlement-card { background: #f0f4f1; border: 1px dashed #263b32; border-radius: 18px; padding: 16px; margin-top: 20px; }
-    .settlement-title { font-size: 14px; font-weight: bold; color: #263b32; margin-bottom: 6px; }
-    .settlement-text { font-size: 14px; color: #444; }
+    .settlement-card { background: var(--accent-card); border: 1px dashed var(--primary-light); border-radius: 18px; padding: 16px; margin-top: 16px; }
+    .settlement-title { font-size: 14px; font-weight: bold; color: var(--primary-light); margin-bottom: 6px; }
+    .settlement-text { font-size: 13px; color: var(--text-main); }
+    .copy-btn { margin-top: 10px; padding: 8px 12px; background: var(--primary-light); color: white; border: none; border-radius: 10px; font-size: 12px; cursor: pointer; width: 100%; font-weight: bold; }
+
+    .fab { position: fixed; right: 20px; bottom: 22px; width: 58px; height: 58px; border-radius: 50%; background: var(--primary); color: white; border: none; font-size: 31px; box-shadow: 0 5px 18px rgba(0,0,0,.3); z-index: 30; cursor: pointer; }
+    .empty { text-align: center; color: var(--text-sub); padding: 40px 10px; font-size: 13px; }
     
-    .fab { position: fixed; right: 20px; bottom: 22px; width: 58px; height: 58px; border-radius: 50%; background: #263b32; color: white; border: none; font-size: 31px; box-shadow: 0 5px 18px rgba(0,0,0,.22); z-index: 30; cursor: pointer; }
-    .empty { text-align: center; color: #999; padding: 40px 10px; font-size: 14px; }
-    
-    .modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 100; align-items: flex-end; }
+    .modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 100; align-items: flex-end; }
     .modal-bg.show { display: flex; }
-    .modal { width: 100%; max-width: 650px; margin: auto; background: #f8f7f3; border-radius: 24px 24px 0 0; max-height: 92vh; overflow-y: auto; padding: 20px; }
+    .modal { width: 100%; max-width: 650px; margin: auto; background: var(--bg-color); border-radius: 24px 24px 0 0; max-height: 92vh; overflow-y: auto; padding: 20px; }
     .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-    .close { font-size: 28px; color: #888; cursor: pointer; }
-    label { display: block; font-size: 12px; color: #777; margin: 12px 0 5px; }
-    input, select, textarea { width: 100%; border: 1px solid #ddd; border-radius: 11px; padding: 11px; font-size: 15px; background: white; outline: none; }
+    .close { font-size: 26px; color: var(--text-sub); cursor: pointer; }
+    label { display: block; font-size: 12px; color: var(--text-sub); margin: 12px 0 5px; }
+    input, select, textarea { width: 100%; border: 1px solid var(--border-color); border-radius: 11px; padding: 11px; font-size: 15px; background: var(--card-bg); color: var(--text-main); outline: none; }
     
-    .amount-box { background: #fff; padding: 14px; border-radius: 14px; }
+    .amount-box { background: var(--card-bg); padding: 14px; border-radius: 14px; border: 1px solid var(--border-color); }
     .amount-row { display: flex; gap: 8px; align-items: center; }
-    .amount-row input { font-size: 22px; font-weight: bold; }
-    .rate-row { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 12px; color: #777; }
-    .rate-row input { width: 80px; padding: 5px; font-size: 12px; text-align: center; }
+    .amount-row input { font-size: 24px; font-weight: bold; }
+    .tax-btns { display: flex; gap: 6px; margin-top: 8px; }
+    .tax-btn { flex: 1; padding: 6px; background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 8px; font-size: 11px; color: var(--text-main); cursor: pointer; text-align: center; }
+    .rate-row { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 12px; color: var(--text-sub); }
+    .rate-row input { width: 75px; padding: 4px; font-size: 12px; text-align: center; }
     
+    .cat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .cat-chip { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 10px 4px; text-align: center; font-size: 12px; cursor: pointer; }
+    .cat-chip.selected { background: var(--primary); color: white; border-color: var(--primary); font-weight: bold; }
+
+    .tag-scroll { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; margin-top: 6px; }
+    .quick-tag { flex: 0 0 auto; padding: 5px 10px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 15px; font-size: 11px; cursor: pointer; color: var(--text-sub); }
+
     .two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .people { display: flex; gap: 8px; }
-    .choice { flex: 1; border: 1px solid #ddd; background: white; border-radius: 11px; padding: 11px; text-align: center; cursor: pointer; }
-    .choice.selected { background: #263b32; color: white; border-color: #263b32; }
-    .save { width: 100%; margin-top: 18px; padding: 14px; border: none; border-radius: 13px; background: #263b32; color: white; font-size: 16px; font-weight: bold; cursor: pointer; }
+    .choice { flex: 1; border: 1px solid var(--border-color); background: var(--card-bg); border-radius: 11px; padding: 11px; text-align: center; cursor: pointer; }
+    .choice.selected { background: var(--primary); color: white; border-color: var(--primary); font-weight: bold; }
+    .save { width: 100%; margin-top: 18px; padding: 14px; border: none; border-radius: 13px; background: var(--primary); color: white; font-size: 16px; font-weight: bold; cursor: pointer; }
     
-    .loading { position: fixed; inset: 0; background: rgba(255,255,255,.7); display: none; align-items: center; justify-content: center; z-index: 200; font-weight: bold; }
+    .loading { position: fixed; inset: 0; background: rgba(0,0,0,.4); color: white; display: none; align-items: center; justify-content: center; z-index: 200; font-weight: bold; }
     .loading.show { display: flex; }
-    .sync-status { font-size: 11px; opacity: .65; margin-top: 4px; }
-    .bar-row { margin-bottom: 10px; }
-    .bar-label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px; }
-    .bar-bg { height: 7px; background: #eee; border-radius: 10px; overflow: hidden; }
-    .bar { height: 100%; background: #617c6d; border-radius: 10px; }
+    .sync-status { font-size: 11px; opacity: .8; }
   </style>
 </head>
 <body>
 
 <div class="app">
   <header>
-    <h1>Walter & Cherry｜日本之旅 🇯🇵</h1>
-    <p>Japan Trip Expense Tracker</p>
-    <div class="sync-status" id="syncStatus">☁️ 正在同步...</div>
+    <div>
+      <h1>Walter & Cherry｜日本之旅 🇯🇵</h1>
+      <div class="sync-status" id="syncStatus">☁️ 正在載入...</div>
+    </div>
+    <button class="theme-btn" onclick="toggleTheme()">🌙/☀️</button>
   </header>
 
-  <!-- 頂部匯率計算器 -->
+  <!-- 換算計算器 -->
   <div class="currency">
     <div class="currency-header">
-      <span>💴 換算計算器</span>
-      <span>匯率: <input id="baseRate" type="number" step="0.0001" value="0.0497" style="width:65px; padding:2px 4px; font-size:12px;" onchange="updateCalcRate()"></span>
+      <span>💴 即時換算</span>
+      <span>基準匯率: <input id="baseRate" type="number" step="0.0001" value="0.0497" style="width:60px; padding:2px; font-size:11px;" onchange="updateCalcRate()"></span>
     </div>
     <div class="currency-row">
-      <input id="calcJPY" type="number" placeholder="日圓 (JPY)" oninput="calcFromJPY()">
+      <input id="calcJPY" type="number" inputmode="decimal" placeholder="日圓 (JPY)" oninput="calcFromJPY()">
       <span>→</span>
-      <input id="calcHKD" type="number" placeholder="港幣 (HKD)" oninput="calcFromHKD()">
+      <input id="calcHKD" type="number" inputmode="decimal" placeholder="港幣 (HKD)" oninput="calcFromHKD()">
     </div>
   </div>
 
   <div class="tabs">
     <div class="tab active" onclick="showPage('summary', this)">總覽</div>
     <div class="tab" onclick="showPage('records', this)">明細紀錄</div>
-    <div class="tab" onclick="showPage('stats', this)">支出統計</div>
+    <div class="tab" onclick="showPage('stats', this)">圖表統計</div>
   </div>
 
   <!-- 頁面 1：總覽 -->
@@ -128,14 +162,15 @@
       </div>
     </div>
 
-    <!-- 移至下方的結算提示 -->
+    <!-- 收納在底部的結算與 WhatsApp 一鍵複製 -->
     <div class="settlement-card">
-      <div class="settlement-title">🤝 旅程結算參考</div>
+      <div class="settlement-title">🤝 旅程結算帳單</div>
       <div class="settlement-text" id="settlement">計算中...</div>
+      <button class="copy-btn" onclick="copySettlementText()">📋 一鍵複製 WhatsApp 結算文字</button>
     </div>
   </section>
 
-  <!-- 頁面 2：明細紀錄（支援按天數篩選） -->
+  <!-- 頁面 2：明細紀錄 -->
   <section id="records" class="page">
     <div class="day-filter">
       <button class="day-btn active" onclick="filterByDay('ALL', this)">全部</button>
@@ -144,15 +179,22 @@
       <button class="day-btn" onclick="filterByDay('Day 3', this)">Day 3</button>
       <button class="day-btn" onclick="filterByDay('Day 4', this)">Day 4</button>
       <button class="day-btn" onclick="filterByDay('Day 5', this)">Day 5</button>
+      <button class="day-btn" onclick="filterByDay('事前/其他', this)">事前/其他</button>
     </div>
-    <div id="daySummary" style="font-size:12px; color:#666; margin-bottom:10px; padding-left:4px;"></div>
+    <div id="daySummary" style="font-size:12px; color:var(--text-sub); margin-bottom:10px; padding-left:4px;"></div>
     <div id="recordList"></div>
   </section>
 
-  <!-- 頁面 3：統計 -->
+  <!-- 頁面 3：專業圖表統計 -->
   <section id="stats" class="page">
-    <div class="card"><div class="section-title">📊 分類支出</div><div id="categoryStats"></div></div>
-    <div class="card"><div class="section-title">💳 付款方式</div><div id="paymentStats"></div></div>
+    <div class="card">
+      <div class="section-title">📊 分類比例圓餅圖</div>
+      <div id="chartCategory" style="min-height: 250px;"></div>
+    </div>
+    <div class="card">
+      <div class="section-title">💳 付款方式統計</div>
+      <div id="paymentStats"></div>
+    </div>
   </section>
 </div>
 
@@ -163,20 +205,37 @@
   <div class="modal">
     <div class="modal-header"><h2>新增支出</h2><div class="close" onclick="closeModal()">×</div></div>
     
-    <label>金額與貨幣</label>
+    <label>金額與快捷稅率</label>
     <div class="amount-box">
       <div class="amount-row">
-        <input id="amount" type="number" step="0.01" placeholder="輸入金額">
-        <select id="currencyType" style="width:100px;" onchange="updateConversion()">
+        <input id="amount" type="number" step="0.01" inputmode="decimal" placeholder="金額" autofocus>
+        <select id="currencyType" style="width:90px;" onchange="updateConversion()">
           <option value="JPY">JPY ¥</option>
           <option value="HKD">HKD $</option>
         </select>
       </div>
+      <div class="tax-btns">
+        <div class="tax-btn" onclick="applyTax(1.1)">+10% 稅</div>
+        <div class="tax-btn" onclick="applyTax(1.08)">+8% 輕稅</div>
+        <div class="tax-btn" onclick="applyTax(1 / 1.1)">-10% 免稅</div>
+      </div>
       <div class="rate-row">
         <span>自訂匯率：</span>
-        <input id="itemRate" type="number" step="0.0001" value="0.0497" oninput="updateConversion()">
-        <span id="convertedText" style="margin-left:auto; font-weight:bold; color:#263b32;">約 HK$0.00</span>
+        <input id="itemRate" type="number" step="0.0001" value="0.0497" inputmode="decimal" oninput="updateConversion()">
+        <span id="convertedText" style="margin-left:auto; font-weight:bold; color:var(--primary-light);">約 HK$0.00</span>
       </div>
+    </div>
+
+    <label>類別</label>
+    <div class="cat-grid" id="catGrid">
+      <div class="cat-chip selected" onclick="selectCat('🍜 食物', this)">🍜 食物</div>
+      <div class="cat-chip" onclick="selectCat('☕ 飲品', this)">☕ 飲品</div>
+      <div class="cat-chip" onclick="selectCat('🛍️ 購物', this)">🛍️ 購物</div>
+      <div class="cat-chip" onclick="selectCat('🚆 交通', this)">🚆 交通</div>
+      <div class="cat-chip" onclick="selectCat('🏨 住宿', this)">🏨 住宿</div>
+      <div class="cat-chip" onclick="selectCat('🎫 景點', this)">🎫 景點</div>
+      <div class="cat-chip" onclick="selectCat('✈️ 機票', this)">✈️️ 機票</div>
+      <div class="cat-chip" onclick="selectCat('📦 其他', this)">📦 其他</div>
     </div>
 
     <div class="two">
@@ -194,18 +253,6 @@
       <div><label>日期</label><input id="date" type="date"></div>
     </div>
 
-    <label>類別</label>
-    <select id="category">
-      <option value="🍜 食物">🍜 食物</option>
-      <option value="☕ 飲品">☕ 飲品</option>
-      <option value="🛍️ 購物">🛍️ 購物</option>
-      <option value="🚆 交通">🚆 交通</option>
-      <option value="🏨 住宿">🏨 住宿</option>
-      <option value="🎫 景點">🎫 景點</option>
-      <option value="✈️ 機票">✈️ 機票</option>
-      <option value="📦 其他">📦 其他</option>
-    </select>
-
     <label>付款方式</label>
     <select id="paymentMethod">
       <option value="💴 Cash (現金)">💴 Cash (現金)</option>
@@ -220,24 +267,56 @@
       <div class="choice" data-person="Cherry" onclick="selectPerson(this)">Cherry</div>
     </div>
 
-    <label>備註</label>
-    <textarea id="note" placeholder="例如：築地市場海鮮丼 / 藥妝店..."></textarea>
+    <label>備註 (可點選快捷標籤)</label>
+    <textarea id="note" placeholder="項目說明..."></textarea>
+    <div class="tag-scroll">
+      <div class="quick-tag" onclick="addTag('7-11')">🏪 7-11</div>
+      <div class="quick-tag" onclick="addTag('FamilyMart')">🏪 FamilyMart</div>
+      <div class="quick-tag" onclick="addTag('大國藥妝')">💊 大國藥妝</div>
+      <div class="quick-tag" onclick="addTag('唐吉訶德')">🐧 唐吉訶德</div>
+      <div class="quick-tag" onclick="addTag('Suica加值')">🐧 Suica加值</div>
+      <div class="quick-tag" onclick="addTag('一蘭拉麵')">🍜 一蘭拉麵</div>
+    </div>
 
     <button class="save" id="saveButton" onclick="saveExpense()">儲存支出</button>
   </div>
 </div>
 
-<div class="loading" id="loading">☁️ 資料同步中...</div>
+<div class="loading" id="loading">☁️ 同步中...</div>
 
 <script>
-// ⚠️️ 請填入你的 GAS Web App URL
 const API_URL = 'https://script.google.com/macros/s/AKfycbyGC_wo7E5jVk-O-GVd_38BLGn6r13uxMKy265hyOt6SjeGwv4WdK-3EDE_LwBa4efpEw/exec';
 
 let expenses = [];
 let selectedPerson = 'Walter';
+let selectedCategory = '🍜 食物';
 let currentDayFilter = 'ALL';
+let categoryChart = null;
 
-window.onload = loadExpenses;
+window.onload = () => {
+  fetchExchangeRate();
+  loadLocalExpenses();
+  syncWithServer();
+};
+
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme');
+  const target = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', target);
+}
+
+// 💱 自動抓取最新即時匯率
+async function fetchExchangeRate() {
+  try {
+    const res = await fetch('https://open.er-api.com/v6/latest/JPY');
+    const data = await res.json();
+    if (data && data.rates && data.rates.HKD) {
+      const rate = data.rates.HKD.toFixed(4);
+      document.getElementById('baseRate').value = rate;
+      document.getElementById('itemRate').value = rate;
+    }
+  } catch(e) { console.log('使用預設匯率'); }
+}
 
 function formatNumber(num) {
   return Number(num || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -248,6 +327,7 @@ function showPage(page, el) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.getElementById(page).classList.add('active');
   el.classList.add('active');
+  if (page === 'stats') renderChart();
 }
 
 function updateCalcRate() {
@@ -278,16 +358,30 @@ function openModal() {
 
 function closeModal() { document.getElementById('modalBg').classList.remove('show'); }
 
+function applyTax(factor) {
+  const amountEl = document.getElementById('amount');
+  let val = Number(amountEl.value) || 0;
+  if (val > 0) {
+    amountEl.value = Math.round(val * factor);
+    updateConversion();
+  }
+}
+
 function updateConversion() {
   const amount = Number(document.getElementById('amount').value) || 0;
   const currency = document.getElementById('currencyType').value;
   const rate = Number(document.getElementById('itemRate').value) || 0.0497;
-  
   let hkd = (currency === 'JPY') ? (amount * rate) : amount;
   document.getElementById('convertedText').innerText = `約 HK$${formatNumber(hkd)}`;
 }
 
 document.getElementById('amount').addEventListener('input', updateConversion);
+
+function selectCat(cat, el) {
+  document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedCategory = cat;
+}
 
 function selectPerson(el) {
   document.querySelectorAll('.choice').forEach(c => c.classList.remove('selected'));
@@ -295,15 +389,30 @@ function selectPerson(el) {
   selectedPerson = el.dataset.person;
 }
 
-async function loadExpenses() {
+function addTag(tag) {
+  const noteEl = document.getElementById('note');
+  noteEl.value = noteEl.value ? `${noteEl.value} ${tag}` : tag;
+}
+
+// 📴 離線 LocalStorage 優先讀寫
+function loadLocalExpenses() {
+  const local = localStorage.getItem('japan_expenses');
+  if (local) {
+    expenses = JSON.parse(local);
+    renderAll();
+  }
+}
+
+async function syncWithServer() {
   document.getElementById('syncStatus').innerText = '☁️ 正在同步...';
   try {
     const res = await fetch(API_URL);
     expenses = await res.json();
+    localStorage.setItem('japan_expenses', JSON.stringify(expenses));
     renderAll();
-    document.getElementById('syncStatus').innerText = '☁️ 已同步 · ' + new Date().toLocaleTimeString('zh-HK', { hour: '2-digit', minute: '2-digit' });
+    document.getElementById('syncStatus').innerText = '☁️ 已最新同步 · ' + new Date().toLocaleTimeString('zh-HK', { hour: '2-digit', minute: '2-digit' });
   } catch (err) {
-    document.getElementById('syncStatus').innerText = '⚠️ 同步失敗';
+    document.getElementById('syncStatus').innerText = '📴 離線模式 (資料已儲存於本機)';
   }
 }
 
@@ -311,9 +420,10 @@ async function saveExpense() {
   const amount = Number(document.getElementById('amount').value);
   if (!amount || amount <= 0) return alert('請輸入有效金額');
 
+  if (navigator.vibrate) navigator.vibrate(50); // 震動反饋
+
   const currency = document.getElementById('currencyType').value;
   const rate = Number(document.getElementById('itemRate').value) || 0.0497;
-  
   const jpy = (currency === 'JPY') ? amount : (amount / rate);
   const hkd = (currency === 'JPY') ? (amount * rate) : amount;
 
@@ -322,42 +432,43 @@ async function saveExpense() {
   const fullNote = `[${dayTag}] ${noteRaw}`;
 
   const data = {
+    id: 'local_' + Date.now(),
     date: document.getElementById('date').value,
     time: new Date().toTimeString().substring(0, 5),
     jpy, hkd,
-    cat: document.getElementById('category').value,
+    cat: selectedCategory,
     pay: document.getElementById('paymentMethod').value,
     person: selectedPerson,
     kind: dayTag,
     note: fullNote
   };
 
-  document.getElementById('loading').classList.add('show');
+  // 本機先存，體驗零延遲
+  expenses.unshift(data);
+  localStorage.setItem('japan_expenses', JSON.stringify(expenses));
+  renderAll();
+  closeModal();
 
+  document.getElementById('amount').value = '';
+  document.getElementById('note').value = '';
+
+  // 背景上傳去 GAS
   try {
     await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'add', data }) });
-    document.getElementById('loading').classList.remove('show');
-    closeModal();
-    document.getElementById('amount').value = '';
-    document.getElementById('note').value = '';
-    loadExpenses();
-  } catch (e) {
-    document.getElementById('loading').classList.remove('show');
-    alert('儲存失敗');
-  }
+    syncWithServer();
+  } catch (e) { console.log('離線儲存，連線時將會同步'); }
 }
 
 async function deleteRecord(id) {
   if (!confirm('確定要刪除這筆紀錄？')) return;
-  document.getElementById('loading').classList.add('show');
+  expenses = expenses.filter(e => e.id !== id);
+  localStorage.setItem('japan_expenses', JSON.stringify(expenses));
+  renderAll();
+
   try {
     await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'delete', id }) });
-    document.getElementById('loading').classList.remove('show');
-    loadExpenses();
-  } catch (e) {
-    document.getElementById('loading').classList.remove('show');
-    alert('刪除失敗');
-  }
+    syncWithServer();
+  } catch (e) {}
 }
 
 function filterByDay(day, btn) {
@@ -370,7 +481,6 @@ function filterByDay(day, btn) {
 function renderAll() {
   renderSummary();
   renderRecords();
-  renderStats();
 }
 
 function renderSummary() {
@@ -396,6 +506,21 @@ function renderSummary() {
   } else {
     settlementEl.innerHTML = `Walter 補回 <b>HK$${formatNumber(Math.abs(diff))}</b> 給 Cherry 即可平分`;
   }
+}
+
+function copySettlementText() {
+  let totalHKD = expenses.reduce((s, e) => s + Number(e.hkd || 0), 0);
+  let walter = expenses.filter(e => e.person === 'Walter').reduce((s, e) => s + Number(e.hkd || 0), 0);
+  let cherry = expenses.filter(e => e.person === 'Cherry').reduce((s, e) => s + Number(e.hkd || 0), 0);
+  let diff = walter - (totalHKD / 2);
+
+  let text = `🇯🇵 *Walter & Cherry 日本之旅結算帳單*\n------------------------\n💰 總花費：HK$${formatNumber(totalHKD)}\n👤 Walter 已付：HK$${formatNumber(walter)}\n👤 Cherry 已付：HK$${formatNumber(cherry)}\n------------------------\n🤝 *結算結果*：\n`;
+  if (Math.abs(diff) < 0.01) text += `雙方支出完全相等！🎉`;
+  else if (diff > 0) text += `Cherry 需給 Walter *HK$${formatNumber(diff)}*`;
+  else text += `Walter 需給 Cherry *HK$${formatNumber(Math.abs(diff))}*`;
+
+  navigator.clipboard.writeText(text);
+  alert('已複製結算帳單！可以直接貼去 WhatsApp / LINE 頻道！');
 }
 
 function renderRecords() {
@@ -426,24 +551,26 @@ function renderRecords() {
   `).join('');
 }
 
-function renderStats() {
-  const totalHKD = expenses.reduce((s, e) => s + Number(e.hkd || 0), 0) || 1;
-  const cats = {}, pays = {};
+// 📊 繪製 ApexCharts 圓餅圖
+function renderChart() {
+  const cats = {};
+  expenses.forEach(e => cats[e.cat] = (cats[e.cat] || 0) + Number(e.hkd || 0));
 
-  expenses.forEach(e => {
-    cats[e.cat] = (cats[e.cat] || 0) + Number(e.hkd || 0);
-    pays[e.pay] = (pays[e.pay] || 0) + Number(e.hkd || 0);
-  });
+  const labels = Object.keys(cats);
+  const series = Object.values(cats);
 
-  document.getElementById('categoryStats').innerHTML = Object.keys(cats).map(c => {
-    const pct = Math.round((cats[c] / totalHKD) * 100);
-    return `<div class="bar-row"><div class="bar-label"><span>${c}</span><span>HK$${formatNumber(cats[c])} (${pct}%)</span></div><div class="bar-bg"><div class="bar" style="width:${pct}%"></div></div></div>`;
-  }).join('');
+  if (categoryChart) categoryChart.destroy();
 
-  document.getElementById('paymentStats').innerHTML = Object.keys(pays).map(p => {
-    const pct = Math.round((pays[p] / totalHKD) * 100);
-    return `<div class="bar-row"><div class="bar-label"><span>${p}</span><span>HK$${formatNumber(pays[p])} (${pct}%)</span></div><div class="bar-bg"><div class="bar" style="width:${pct}%"></div></div></div>`;
-  }).join('');
+  const options = {
+    series: series,
+    labels: labels,
+    chart: { type: 'donut', height: 260 },
+    legend: { position: 'bottom' },
+    dataLabels: { enabled: true, formatter: (val) => val.toFixed(0) + '%' }
+  };
+
+  categoryChart = new ApexCharts(document.querySelector("#chartCategory"), options);
+  categoryChart.render();
 }
 </script>
 </body>
