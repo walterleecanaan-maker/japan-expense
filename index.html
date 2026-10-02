@@ -3,894 +3,586 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Walter & Cherry｜日本旅行記帳與行程 🇯🇵</title>
-  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <title>東京旅遊手冊 & 記帳</title>
   <style>
     :root {
-      --bg-color: #f6f4ef;
+      --primary: #ff6b81;
+      --primary-hover: #ff4757;
+      --bg: #f7f9fc;
       --card-bg: #ffffff;
-      --text-main: #333333;
-      --text-sub: #777777;
-      --primary: #263b32;
-      --primary-light: #617c6d;
-      --border-color: #e5e2d9;
-      --input-bg: #ffffff;
-      --accent-card: #f0f4f1;
-      --progress-bg: #e0ded5;
-      --progress-fill: #617c6d;
+      --text: #2f3542;
+      --subtext: #747d8c;
+      --border: #eccc68;
+      --shadow: 0 4px 15px rgba(0,0,0,0.05);
+      --radius: 12px;
     }
 
-    [data-theme="dark"] {
-      --bg-color: #121212;
-      --card-bg: #1e1e1e;
-      --text-main: #e0e0e0;
-      --text-sub: #aaaaaa;
-      --primary: #4e7362;
-      --primary-light: #7a9e8c;
-      --border-color: #333333;
-      --input-bg: #2a2a2a;
-      --accent-card: #1c2822;
-      --progress-bg: #333333;
-      --progress-fill: #7a9e8c;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); padding-bottom: 80px; }
 
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", sans-serif; background: var(--bg-color); color: var(--text-main); transition: background 0.3s, color 0.3s; }
-    .app { max-width: 650px; margin: auto; min-height: 100vh; background: var(--bg-color); }
-    
-    header { background: var(--primary); color: white; padding: 18px 20px 14px; position: sticky; top: 0; z-index: 20; display: flex; justify-content: space-between; align-items: center; }
-    header h1 { margin: 0; font-size: 19px; font-weight: 700; }
-    .sync-status { font-size: 11px; opacity: .8; margin-top: 3px; }
-    .theme-btn { background: rgba(255,255,255,0.2); border: none; color: white; padding: 6px 12px; border-radius: 20px; font-size: 14px; cursor: pointer; }
+    /* Header */
+    header { background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%); color: white; padding: 20px 15px; text-align: center; border-radius: 0 0 20px 20px; box-shadow: var(--shadow); }
+    header h1 { font-size: 1.4rem; font-weight: 600; margin-bottom: 5px; }
+    header p { font-size: 0.85rem; opacity: 0.9; }
 
-    /* 即時換算區塊 */
-    .currency { background: var(--card-bg); margin: 14px; padding: 16px 18px; border-radius: 18px; box-shadow: 0 4px 16px rgba(0,0,0,.06); border: 1px solid var(--border-color); }
-    .currency-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 14px; font-weight: bold; color: var(--text-main); }
-    .currency-row { display: flex; gap: 10px; align-items: center; }
-    .currency input { width: 100%; border: 2px solid var(--border-color); border-radius: 12px; padding: 10px 12px; font-size: 18px; font-weight: bold; background: var(--input-bg); color: var(--text-main); }
-    .currency input:focus { border-color: var(--primary-light); }
-    .currency-arrow { font-size: 18px; color: var(--text-sub); font-weight: bold; }
-    
-    /* Tab 選單 */
-    .tabs { display: flex; background: var(--card-bg); border-bottom: 2px solid var(--border-color); position: sticky; top: 62px; z-index: 15; box-shadow: 0 2px 8px rgba(0,0,0,.03); overflow-x: auto; }
-    .tab { flex: 1; min-width: 80px; text-align: center; padding: 12px 4px; font-size: 14px; font-weight: 600; color: var(--text-sub); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; transition: all 0.2s; white-space: nowrap; }
-    .tab.active { color: var(--primary-light); font-weight: 800; border-bottom: 3px solid var(--primary-light); background: rgba(97, 124, 109, 0.05); }
-    .tab-icon { font-size: 16px; }
+    /* Navigation Tabs */
+    .nav-tabs { display: flex; justify-content: space-around; background: white; margin: 15px; padding: 6px; border-radius: 30px; box-shadow: var(--shadow); }
+    .nav-btn { flex: 1; padding: 10px; text-align: center; border: none; background: transparent; font-size: 0.95rem; font-weight: 600; color: var(--subtext); border-radius: 20px; cursor: pointer; transition: all 0.3s; }
+    .nav-btn.active { background: var(--primary); color: white; }
 
-    .page { display: none; padding: 14px; padding-bottom: 100px; }
-    .page.active { display: block; }
-    
-    .card { background: var(--card-bg); border-radius: 18px; padding: 18px; margin-bottom: 14px; box-shadow: 0 3px 12px rgba(0,0,0,.04); border: 1px solid var(--border-color); }
-    .total-label { color: var(--text-sub); font-size: 13px; }
-    .total-hkd { font-size: 36px; font-weight: 800; margin-top: 4px; color: var(--text-main); }
-    .total-jpy { font-size: 15px; color: var(--text-sub); margin-top: 2px; }
+    /* Main Container */
+    .container { padding: 0 15px; max-width: 600px; margin: 0 auto; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
 
-    /* 預算進度條樣式 */
-    .budget-section { margin-top: 14px; padding-top: 10px; border-top: 1px dashed var(--border-color); }
-    .budget-title { display: flex; justify-content: space-between; font-size: 13px; font-weight: bold; margin-bottom: 6px; }
-    .budget-bar-bg { width: 100%; height: 12px; background: var(--progress-bg); border-radius: 10px; overflow: hidden; }
-    .budget-bar-fill { height: 100%; background: var(--progress-fill); width: 0%; transition: width 0.4s ease, background-color 0.3s; }
-    .budget-info { font-size: 12px; color: var(--text-sub); margin-top: 6px; text-align: right; }
-    
-    .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .mini { background: var(--bg-color); border-radius: 13px; padding: 14px; }
-    .mini-label { font-size: 13px; color: var(--text-sub); margin-bottom: 4px; }
-    .mini-value { font-size: 18px; font-weight: 700; color: var(--text-main); }
-    
-    .day-filter { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 10px; -webkit-overflow-scrolling: touch; }
-    .day-btn { flex: 0 0 auto; padding: 8px 16px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; font-size: 13px; color: var(--text-sub); cursor: pointer; }
-    .day-btn.active { background: var(--primary); color: white; border-color: var(--primary); font-weight: bold; }
-    
-    .section-title { font-size: 15px; font-weight: 700; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-    .record { background: var(--card-bg); border-radius: 16px; padding: 14px; margin-bottom: 10px; border: 1px solid var(--border-color); }
-    .record-top { display: flex; justify-content: space-between; align-items: flex-start; }
-    .record-note { font-weight: 700; font-size: 15px; }
-    .record-amount { font-weight: 800; font-size: 17px; }
-    .record-meta { margin-top: 6px; color: var(--text-sub); font-size: 12px; line-height: 1.6; }
-    .record-actions { margin-top: 8px; display: flex; gap: 14px; font-size: 12px; }
-    .edit-btn { color: var(--primary-light); font-weight: bold; cursor: pointer; }
-    .delete-btn { color: #e53935; cursor: pointer; }
+    /* Cards */
+    .card { background: var(--card-bg); border-radius: var(--radius); padding: 15px; margin-bottom: 15px; box-shadow: var(--shadow); }
 
-    /* 時間軸 Timeline 設計 */
-    .timeline { position: relative; padding-left: 20px; margin-top: 10px; }
-    .timeline::before { content: ''; position: absolute; left: 6px; top: 12px; bottom: 12px; width: 2px; background: var(--border-color); }
-    .timeline-item { position: relative; margin-bottom: 16px; }
-    .timeline-dot { position: absolute; left: -20px; top: 16px; width: 10px; height: 10px; border-radius: 50%; background: var(--primary-light); border: 2px solid var(--bg-color); box-shadow: 0 0 0 2px var(--primary-light); }
-    .timeline-card { background: var(--card-bg); border-radius: 14px; padding: 14px 16px; border: 1px solid var(--border-color); box-shadow: 0 2px 8px rgba(0,0,0,.03); }
-    .timeline-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-    .timeline-time { font-size: 14px; font-weight: 800; color: var(--primary-light); background: rgba(97, 124, 109, 0.1); padding: 2px 8px; border-radius: 6px; }
-    .timeline-title { font-size: 15px; font-weight: bold; color: var(--text-main); margin-top: 4px; }
-    .timeline-location { font-size: 13px; color: var(--text-sub); margin-top: 6px; line-height: 1.4; white-space: pre-line; }
+    /* Stats Overview Dashboard */
+    .stats-card { background: linear-gradient(135deg, #2ed573, #1e90ff); color: white; padding: 15px; border-radius: var(--radius); margin-bottom: 15px; }
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; text-align: center; margin-top: 10px; }
+    .stats-item h4 { font-size: 0.75rem; opacity: 0.8; margin-bottom: 3px; }
+    .stats-item p { font-size: 1.1rem; font-weight: bold; }
 
-    .settlement-card { background: var(--accent-card); border: 1px dashed var(--primary-light); border-radius: 18px; padding: 18px; margin-top: 16px; }
-    .settlement-title { font-size: 15px; font-weight: bold; color: var(--primary-light); margin-bottom: 8px; }
-    .settlement-text { font-size: 14px; color: var(--text-main); font-weight: 500; }
+    /* Filter Pills */
+    .filter-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 10px; }
+    .filter-pill { padding: 6px 14px; background: #eef2f5; border-radius: 20px; font-size: 0.85rem; color: var(--subtext); border: none; white-space: nowrap; cursor: pointer; }
+    .filter-pill.active { background: var(--text); color: white; }
 
-    .fab { position: fixed; right: 20px; bottom: 22px; width: 62px; height: 62px; border-radius: 50%; background: var(--primary); color: white; border: none; font-size: 32px; box-shadow: 0 5px 18px rgba(0,0,0,.3); z-index: 30; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-    .empty { text-align: center; color: var(--text-sub); padding: 40px 10px; font-size: 14px; }
-    
-    .modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 100; align-items: flex-end; }
-    .modal-bg.show { display: flex; }
-    .modal { width: 100%; max-width: 650px; margin: auto; background: var(--bg-color); border-radius: 24px 24px 0 0; max-height: 92vh; overflow-y: auto; padding: 20px; }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-    .close { font-size: 26px; color: var(--text-sub); cursor: pointer; }
-    label { display: block; font-size: 13px; color: var(--text-sub); margin: 12px 0 5px; }
-    input, select, textarea { width: 100%; border: 1px solid var(--border-color); border-radius: 11px; padding: 11px; font-size: 15px; background: var(--card-bg); color: var(--text-main); outline: none; }
-    
-    .amount-box { background: var(--card-bg); padding: 14px; border-radius: 14px; border: 1px solid var(--border-color); }
-    .amount-row { display: flex; gap: 8px; align-items: center; }
-    .amount-row input { font-size: 26px; font-weight: bold; }
-    .tax-btns { display: flex; gap: 6px; margin-top: 8px; }
-    .tax-btn { flex: 1; padding: 8px; background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 8px; font-size: 12px; color: var(--text-main); cursor: pointer; text-align: center; font-weight: 600; }
-    .rate-row { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 12px; color: var(--text-sub); }
-    .rate-row input { width: 75px; padding: 4px; font-size: 12px; text-align: center; }
-    
-    .cat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-    .cat-chip { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 12px 4px; text-align: center; font-size: 13px; cursor: pointer; }
-    .cat-chip.selected { background: var(--primary); color: white; border-color: var(--primary); font-weight: bold; }
+    /* Timeline (Schedule) */
+    .timeline { position: relative; padding-left: 20px; border-left: 2px solid #dfe4ea; margin-left: 10px; }
+    .timeline-item { position: relative; margin-bottom: 20px; }
+    .timeline-dot { position: absolute; left: -26px; top: 0; width: 10px; height: 10px; border-radius: 50%; background: var(--primary); border: 2px solid white; }
+    .timeline-card { background: white; padding: 12px; border-radius: var(--radius); box-shadow: var(--shadow); }
+    .timeline-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+    .timeline-time { font-size: 0.8rem; font-weight: bold; color: var(--primary); }
+    .timeline-title { font-weight: bold; font-size: 1rem; margin-bottom: 4px; }
+    .timeline-location { font-size: 0.85rem; color: var(--subtext); }
 
-    .two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .people { display: flex; gap: 8px; }
-    .choice { flex: 1; border: 1px solid var(--border-color); background: var(--card-bg); border-radius: 11px; padding: 11px; text-align: center; cursor: pointer; }
-    .choice.selected { background: var(--primary); color: white; border-color: var(--primary); font-weight: bold; }
-    .save { width: 100%; margin-top: 18px; padding: 14px; border: none; border-radius: 13px; background: var(--primary); color: white; font-size: 16px; font-weight: bold; cursor: pointer; }
+    /* Record Items (Expense & Notes) */
+    .record-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f2f6; }
+    .record-item:last-child { border-bottom: none; }
+    .record-info h3 { font-size: 0.95rem; margin-bottom: 4px; }
+    .record-info p { font-size: 0.8rem; color: var(--subtext); }
+    .record-amount { text-align: right; }
+    .amount-jpy { font-weight: bold; font-size: 1rem; color: var(--text); }
+    .amount-hkd { font-size: 0.8rem; color: var(--subtext); }
+    .record-actions { display: flex; gap: 8px; margin-top: 4px; font-size: 0.75rem; }
+    .edit-btn { color: #1e90ff; cursor: pointer; }
+    .delete-btn { color: #ff4757; cursor: pointer; }
+
+    /* Form Styles */
+    .form-group { margin-bottom: 12px; }
+    .form-group label { display: block; font-size: 0.85rem; font-weight: bold; margin-bottom: 5px; color: var(--text); }
+    .form-control { width: 100%; padding: 10px; border: 1px solid #dfe4ea; border-radius: 8px; font-size: 0.95rem; outline: none; }
+    .form-row { display: flex; gap: 10px; }
+    .form-row .form-group { flex: 1; }
+
+    /* Modal Popup */
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: flex-end; }
+    .modal.active { display: flex; }
+    .modal-content { background: white; width: 100%; max-width: 600px; border-radius: 20px 20px 0 0; padding: 20px; max-height: 85vh; overflow-y: auto; animation: slideUp 0.3s forwards; }
+    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+    .modal-close { font-size: 1.5rem; border: none; background: none; cursor: pointer; color: var(--subtext); }
+
+    /* Floating Action Button (FAB) */
+    .fab { position: fixed; bottom: 20px; right: 20px; width: 56px; height: 56px; border-radius: 50%; background: var(--primary); color: white; font-size: 1.8rem; border: none; box-shadow: 0 4px 10px rgba(255, 107, 129, 0.4); cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 900; }
+
+    /* Utility */
+    .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; background: var(--primary); color: white; font-size: 1rem; font-weight: bold; cursor: pointer; margin-top: 10px; }
+    .empty { text-align: center; color: var(--subtext); padding: 30px 0; font-size: 0.9rem; }
   </style>
 </head>
 <body>
 
-<div class="app">
   <header>
-    <div>
-      <h1>Walter & Cherry｜日本之旅 🇯🇵</h1>
-      <div class="sync-status" id="syncStatus">☁️ 正在載入...</div>
-    </div>
-    <button class="theme-btn" onclick="toggleTheme()">🌙 / ☀️</button>
+    <h1>🇯🇵 東京旅遊手冊</h1>
+    <p>行程規劃 • 記帳 • 備忘錄</p>
   </header>
 
-  <!-- 即時換算區 -->
-  <div class="currency">
-    <div class="currency-header">
-      <span>💴 即時匯率換算</span>
-      <span style="font-size:12px; font-weight:normal; color:var(--text-sub);">
-        匯率: <input id="baseRate" type="number" step="0.0001" value="0.0497" style="width:60px; padding:2px; font-size:12px;" onchange="updateCalcRate()">
-      </span>
-    </div>
-    <div class="currency-row">
-      <input id="calcJPY" type="number" inputmode="decimal" placeholder="日圓 JPY" oninput="calcFromJPY()">
-      <span class="currency-arrow">→</span>
-      <input id="calcHKD" type="number" inputmode="decimal" placeholder="港幣 HKD" oninput="calcFromHKD()">
-    </div>
+  <!-- Navigation Tabs -->
+  <div class="nav-tabs">
+    <button class="nav-btn active" onclick="switchTab('expense')">💰 記帳</button>
+    <button class="nav-btn" onclick="switchTab('schedule')">🗓 行程</button>
+    <button class="nav-btn" onclick="switchTab('notes')">📝 備忘</button>
   </div>
 
-  <!-- Tab 選單 -->
-  <div class="tabs">
-    <div class="tab active" onclick="showPage('summary', this)"><span class="tab-icon">🏠</span>總覽</div>
-    <div class="tab" onclick="showPage('schedule', this)"><span class="tab-icon">📅</span>行程表</div>
-    <div class="tab" onclick="showPage('notes', this)"><span class="tab-icon">📌</span>必去/筆記</div>
-    <div class="tab" onclick="showPage('records', this)"><span class="tab-icon">📜</span>記帳明細</div>
-    <div class="tab" onclick="showPage('stats', this)"><span class="tab-icon">📊</span>圖表</div>
-  </div>
-
-  <!-- 頁面 1：總覽 -->
-  <section id="summary" class="page active">
-    <div class="card">
-      <div class="total-label">全行程總支出</div>
-      <div class="total-hkd" id="totalHKD">HK$0.00</div>
-      <div class="total-jpy" id="totalJPY">¥0</div>
-
-      <div class="budget-section">
-        <div class="budget-title">
-          <span>🎯 每人預算目標 (HK$10,000)</span>
-          <span id="perPersonSpent">人均 HK$0.00</span>
-        </div>
-        <div class="budget-bar-bg">
-          <div class="budget-bar-fill" id="budgetBarFill"></div>
-        </div>
-        <div class="budget-info" id="budgetInfo">剩餘 HK$10,000.00 / 人</div>
-      </div>
-    </div>
-    
-    <div class="card">
-      <div class="section-title">👥 付款紀錄</div>
-      <div class="summary-grid">
-        <div class="mini"><div class="mini-label">Walter 已付</div><div class="mini-value" id="walterPaid">HK$0.00</div></div>
-        <div class="mini"><div class="mini-label">Cherry 已付</div><div class="mini-value" id="cherryPaid">HK$0.00</div></div>
-      </div>
-    </div>
-
-    <div class="settlement-card">
-      <div class="settlement-title">🤝 旅程結算帳單</div>
-      <div class="settlement-text" id="settlement">計算中...</div>
-    </div>
-  </section>
-
-  <!-- 頁面 2：行程時間表 -->
-  <section id="schedule" class="page">
-    <div class="day-filter">
-      <button class="day-btn active" onclick="filterSchedule('Day 1', this)">Day 1</button>
-      <button class="day-btn" onclick="filterSchedule('Day 2', this)">Day 2</button>
-      <button class="day-btn" onclick="filterSchedule('Day 3', this)">Day 3</button>
-      <button class="day-btn" onclick="filterSchedule('Day 4', this)">Day 4</button>
-      <button class="day-btn" onclick="filterSchedule('Day 5', this)">Day 5</button>
-    </div>
-    <div id="scheduleList"></div>
-  </section>
-
-  <!-- 頁面 3：必去景點 / 食店筆記牆 -->
-  <section id="notes" class="page">
-    <div class="day-filter">
-      <button class="day-btn active" onclick="filterNotes('ALL', this)">全部</button>
-      <button class="day-btn" onclick="filterNotes('🍜 美食', this)">🍜 美食</button>
-      <button class="day-btn" onclick="filterNotes('🛍️ 必買', this)">🛍️️ 必買</button>
-      <button class="day-btn" onclick="filterNotes('🎫 景點', this)">🎫 景點</button>
-      <button class="day-btn" onclick="filterNotes('📝 筆記', this)">📝 筆記</button>
-    </div>
-    <div id="notesList"></div>
-  </section>
-
-  <!-- 頁面 4：明細紀錄 -->
-  <section id="records" class="page">
-    <div class="day-filter">
-      <button class="day-btn active" onclick="filterByDay('ALL', this)">全部</button>
-      <button class="day-btn" onclick="filterByDay('Day 1', this)">Day 1</button>
-      <button class="day-btn" onclick="filterByDay('Day 2', this)">Day 2</button>
-      <button class="day-btn" onclick="filterByDay('Day 3', this)">Day 3</button>
-      <button class="day-btn" onclick="filterByDay('Day 4', this)">Day 4</button>
-      <button class="day-btn" onclick="filterByDay('Day 5', this)">Day 5</button>
-      <button class="day-btn" onclick="filterByDay('事前/其他', this)">事前/其他</button>
-    </div>
-    <div id="daySummary" style="font-size:13px; font-weight:600; color:var(--text-sub); margin-bottom:12px; padding-left:4px;"></div>
-    <div id="recordList"></div>
-  </section>
-
-  <!-- 頁面 5：圖表統計 -->
-  <section id="stats" class="page">
-    <div class="card">
-      <div class="section-title">📊 分類比例圓餅圖</div>
-      <div id="chartCategory" style="min-height: 250px;"></div>
-    </div>
-  </section>
-</div>
-
-<button class="fab" id="fabBtn" onclick="handleFabClick()">+</button>
-
-<!-- 記帳 Modal -->
-<div class="modal-bg" id="modalExpense">
-  <div class="modal">
-    <div class="modal-header"><h2 id="modalTitle">新增支出</h2><div class="close" onclick="closeModal('modalExpense')">×</div></div>
-    <input type="hidden" id="editId" value="">
-    <label>金額與快捷稅率</label>
-    <div class="amount-box">
-      <div class="amount-row">
-        <input id="amount" type="number" step="0.01" inputmode="decimal" placeholder="金額">
-        <select id="currencyType" style="width:95px;" onchange="updateConversion()">
-          <option value="JPY">JPY ¥</option>
-          <option value="HKD">HKD $</option>
-        </select>
-      </div>
-      <div class="tax-btns">
-        <div class="tax-btn" onclick="applyTax(1.1)">+10% 稅</div>
-        <div class="tax-btn" onclick="applyTax(1.08)">+8% 輕稅</div>
-        <div class="tax-btn" onclick="applyTax(1 / 1.1)">-10% 免稅</div>
-      </div>
-      <div class="rate-row">
-        <span>自訂匯率：</span>
-        <input id="itemRate" type="number" step="0.0001" value="0.0497" inputmode="decimal" oninput="updateConversion()">
-        <span id="convertedText" style="margin-left:auto; font-weight:bold; color:var(--primary-light);">約 HK$0.00</span>
-      </div>
-    </div>
-    <label>類別</label>
-    <div class="cat-grid" id="catGrid">
-      <div class="cat-chip selected" onclick="selectCat('🍜 食物', this)">🍜 食物</div>
-      <div class="cat-chip" onclick="selectCat('☕ 飲品', this)">☕ 飲品</div>
-      <div class="cat-chip" onclick="selectCat('🛍 購物', this)">🛍️ 購物</div>
-      <div class="cat-chip" onclick="selectCat('🚆 交通', this)">🚆 交通</div>
-      <div class="cat-chip" onclick="selectCat('🏨 住宿', this)">🏨 住宿</div>
-      <div class="cat-chip" onclick="selectCat('🎫 景點', this)">🎫 景點</div>
-      <div class="cat-chip" onclick="selectCat('✈️ 機票', this)">✈ 機票</div>
-      <div class="cat-chip" onclick="selectCat('📦 其他', this)">📦 其他</div>
-    </div>
-    <div class="two">
-      <div>
-        <label>行程天數</label>
-        <select id="dayTag">
-          <option value="Day 1">Day 1</option><option value="Day 2">Day 2</option>
-          <option value="Day 3">Day 3</option><option value="Day 4">Day 4</option>
-          <option value="Day 5">Day 5</option><option value="事前/其他">事前/其他</option>
-        </select>
-      </div>
-      <div><label>日期</label><input id="date" type="date"></div>
-    </div>
-    <label>付款方式</label>
-    <select id="paymentMethod">
-      <option value="💴 Cash (現金)">💴 Cash (現金)</option>
-      <option value="💳 Mastercard">💳 Mastercard</option>
-      <option value="💳 Visa">💳 Visa</option>
-      <option value="🐧 Suica/PASMO">🐧 Suica/PASMO</option>
-    </select>
-    <label>誰付款？</label>
-    <div class="people">
-      <div class="choice selected" data-person="Walter" onclick="selectPerson(this)">Walter</div>
-      <div class="choice" data-person="Cherry" onclick="selectPerson(this)">Cherry</div>
-    </div>
-    <label>備註</label>
-    <textarea id="note" placeholder="項目說明..."></textarea>
-    <button class="save" onclick="saveExpense()">儲存支出</button>
-  </div>
-</div>
-
-<!-- 行程 Modal -->
-<div class="modal-bg" id="modalSchedule">
-  <div class="modal">
-    <div class="modal-header"><h2 id="schModalTitle">新增行程時間點</h2><div class="close" onclick="closeModal('modalSchedule')">×</div></div>
-    <input type="hidden" id="schId" value="">
-    <label>天數</label>
-    <select id="schDay">
-      <option value="Day 1">Day 1</option><option value="Day 2">Day 2</option>
-      <option value="Day 3">Day 3</option><option value="Day 4">Day 4</option>
-      <option value="Day 5">Day 5</option>
-    </select>
-    <label>時間</label>
-    <input type="time" id="schTime" value="09:00">
-    <label>行程名稱</label>
-    <input type="text" id="schTitle" placeholder="例如：築地市場食早餐 / 清水寺">
-    <label>地點 / 地圖連結 / 備註</label>
-    <textarea id="schLocation" placeholder="地址、交通方式或備註..."></textarea>
-    <button class="save" onclick="saveSchedule()">儲存行程</button>
-  </div>
-</div>
-
-<!-- 備忘/必去 Modal -->
-<div class="modal-bg" id="modalNote">
-  <div class="modal">
-    <div class="modal-header"><h2>新增口袋名單 / 筆記</h2><div class="close" onclick="closeModal('modalNote')">×</div></div>
-    <input type="hidden" id="noteId" value="">
-    <label>類別</label>
-    <select id="noteCat">
-      <option value="🍜 美食">🍜 美食</option>
-      <option value="🛍️ 必買">🛍️ 必買</option>
-      <option value="🎫 景點">🎫 景點</option>
-      <option value="📝 筆記">📝 筆記</option>
-    </select>
-    <label>名稱</label>
-    <input type="text" id="noteTitle" placeholder="例如：敘敘苑燒肉 / 藥妝店必買清單">
-    <label>詳情 / Google Map 連結 / 筆記</label>
-    <textarea id="noteRemark" placeholder="貼上地圖連結或備註事項..."></textarea>
-    <button class="save" onclick="saveNoteItem()">儲存筆記</button>
-  </div>
-</div>
-
-<script>
-const API_URL = 'https://script.google.com/macros/s/AKfycbyGC_wo7E5jVk-O-GVd_38BLGn6r13uxMKy265hyOt6SjeGwv4WdK-3EDE_LwBa4efpEw/exec';
-const TARGET_PER_PERSON = 10000;
-
-let currentPage = 'summary';
-let expenses = [];
-let schedules = [];
-let notesList = [];
-
-let selectedPerson = 'Walter';
-let selectedCategory = '🍜 食物';
-let currentDayFilter = 'ALL';
-let currentSchFilter = 'Day 1';
-let currentNoteFilter = 'ALL';
-let categoryChart = null;
-
-window.onload = () => {
-  fetchExchangeRate();
-  loadLocalStorage();
-  syncWithServer();
-};
-
-function toggleTheme() {
-  const current = document.documentElement.getAttribute('data-theme');
-  document.documentElement.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
-}
-
-async function fetchExchangeRate() {
-  try {
-    const res = await fetch('https://open.er-api.com/v6/latest/JPY');
-    const data = await res.json();
-    if (data && data.rates && data.rates.HKD) {
-      const rate = data.rates.HKD.toFixed(4);
-      document.getElementById('baseRate').value = rate;
-      document.getElementById('itemRate').value = rate;
-    }
-  } catch(e) {}
-}
-
-function formatNumber(num) {
-  return Number(num || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-}
-
-function showPage(page, el) {
-  currentPage = page;
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById(page).classList.add('active');
-  el.classList.add('active');
-  
-  if (page === 'stats') renderChart();
-}
-
-function handleFabClick() {
-  if (currentPage === 'schedule') {
-    openScheduleModal();
-  } else if (currentPage === 'notes') {
-    openNoteModal();
-  } else {
-    openExpenseModal();
-  }
-}
-
-/* Modal 控制 */
-function openExpenseModal(data = null) {
-  if (data) {
-    document.getElementById('modalTitle').innerText = '編輯支出';
-    document.getElementById('editId').value = data.id;
-    document.getElementById('amount').value = data.jpy || data.hkd;
-    document.getElementById('currencyType').value = data.jpy ? 'JPY' : 'HKD';
-    document.getElementById('date').value = data.date || new Date().toISOString().split('T')[0];
-    document.getElementById('dayTag').value = data.kind || 'Day 1';
-    document.getElementById('paymentMethod').value = data.pay || '💴 Cash (現金)';
-    
-    let cleanNote = data.note || '';
-    cleanNote = cleanNote.replace(/\[.*?\]\s*/, '');
-    document.getElementById('note').value = cleanNote;
-
-    // 選擇對應的誰付款
-    const personBtns = document.querySelectorAll('.choice');
-    personBtns.forEach(btn => {
-      if (btn.dataset.person === data.person) {
-        selectPerson(btn);
-      }
-    });
-  } else {
-    document.getElementById('editId').value = '';
-    document.getElementById('modalTitle').innerText = '新增支出';
-    document.getElementById('date').value = new Date().toISOString().split('T')[0];
-    document.getElementById('itemRate').value = document.getElementById('baseRate').value;
-    document.getElementById('amount').value = '';
-    document.getElementById('note').value = '';
-  }
-  updateConversion();
-  document.getElementById('modalExpense').classList.add('show');
-}
-
-function editExpense(id) {
-  const item = expenses.find(e => e.id === id);
-  if (item) openExpenseModal(item);
-}
-
-function openScheduleModal(data = null) {
-  if (data) {
-    document.getElementById('schModalTitle').innerText = '編輯行程';
-    document.getElementById('schId').value = data.id;
-    document.getElementById('schDay').value = data.day;
-    document.getElementById('schTime').value = data.time;
-    document.getElementById('schTitle').value = data.title;
-    document.getElementById('schLocation').value = data.location || '';
-  } else {
-    document.getElementById('schModalTitle').innerText = '新增行程時間點';
-    document.getElementById('schId').value = '';
-    document.getElementById('schDay').value = currentSchFilter;
-    document.getElementById('schTime').value = '09:00';
-    document.getElementById('schTitle').value = '';
-    document.getElementById('schLocation').value = '';
-  }
-  document.getElementById('modalSchedule').classList.add('show');
-}
-
-function editSchedule(id) {
-  const item = schedules.find(s => s.id === id);
-  if (item) openScheduleModal(item);
-}
-
-function openNoteModal() {
-  document.getElementById('noteId').value = '';
-  document.getElementById('noteTitle').value = '';
-  document.getElementById('noteRemark').value = '';
-  document.getElementById('modalNote').classList.add('show');
-}
-
-function closeModal(id) { document.getElementById(id).classList.remove('show'); }
-
-/* 匯率與計算器 */
-function updateCalcRate() {
-  const r = document.getElementById('baseRate').value;
-  document.getElementById('itemRate').value = r;
-  calcFromJPY();
-}
-
-function calcFromJPY() {
-  const rate = Number(document.getElementById('baseRate').value) || 0.0497;
-  const jpy = Number(document.getElementById('calcJPY').value) || 0;
-  document.getElementById('calcHKD').value = jpy ? (jpy * rate).toFixed(2) : '';
-}
-
-function calcFromHKD() {
-  const rate = Number(document.getElementById('baseRate').value) || 0.0497;
-  const hkd = Number(document.getElementById('calcHKD').value) || 0;
-  document.getElementById('calcJPY').value = hkd ? (hkd / rate).toFixed(0) : '';
-}
-
-function applyTax(factor) {
-  const amountEl = document.getElementById('amount');
-  let val = Number(amountEl.value) || 0;
-  if (val > 0) {
-    amountEl.value = Math.round(val * factor);
-    updateConversion();
-  }
-}
-
-function updateConversion() {
-  const amount = Number(document.getElementById('amount').value) || 0;
-  const currency = document.getElementById('currencyType').value;
-  const rate = Number(document.getElementById('itemRate').value) || 0.0497;
-  let hkd = (currency === 'JPY') ? (amount * rate) : amount;
-  document.getElementById('convertedText').innerText = `約 HK$${formatNumber(hkd)}`;
-}
-
-document.getElementById('amount').addEventListener('input', updateConversion);
-
-function selectCat(cat, el) {
-  document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('selected'));
-  el.classList.add('selected');
-  selectedCategory = cat;
-}
-
-function selectPerson(el) {
-  document.querySelectorAll('.choice').forEach(c => c.classList.remove('selected'));
-  el.classList.add('selected');
-  selectedPerson = el.dataset.person;
-}
-
-/* 本機與伺服器同步 */
-function loadLocalStorage() {
-  expenses = JSON.parse(localStorage.getItem('japan_expenses') || '[]');
-  schedules = JSON.parse(localStorage.getItem('japan_schedules') || '[]');
-  notesList = JSON.parse(localStorage.getItem('japan_notes') || '[]');
-  renderAll();
-}
-
-async function syncWithServer() {
-  document.getElementById('syncStatus').innerText = '☁ 同步中...';
-  try {
-    const res = await fetch(API_URL);
-    const data = await res.json();
-    if (data.expenses) expenses = data.expenses;
-    if (data.schedules) schedules = data.schedules;
-    if (data.notes) notesList = data.notes;
-
-    localStorage.setItem('japan_expenses', JSON.stringify(expenses));
-    localStorage.setItem('japan_schedules', JSON.stringify(schedules));
-    localStorage.setItem('japan_notes', JSON.stringify(notesList));
-
-    renderAll();
-    document.getElementById('syncStatus').innerText = '☁️ 已最新同步 · ' + new Date().toLocaleTimeString('zh-HK', { hour: '2-digit', minute: '2-digit' });
-  } catch (err) {
-    document.getElementById('syncStatus').innerText = '📴 離線模式';
-  }
-}
-
-/* 儲存資料與同步 */
-async function saveExpense() {
-  const amount = Number(document.getElementById('amount').value);
-  if (!amount || amount <= 0) return alert('請輸入金額');
-
-  const editId = document.getElementById('editId').value;
-  const currency = document.getElementById('currencyType').value;
-  const rate = Number(document.getElementById('itemRate').value) || 0.0497;
-  
-  // 日圓四捨五入成整數，港幣保留兩位小數
-  const jpy = (currency === 'JPY') ? Math.round(amount) : Math.round(amount / rate);
-  const hkd = (currency === 'JPY') ? Number((amount * rate).toFixed(2)) : Number(amount.toFixed(2));
-  
-  const dayTag = document.getElementById('dayTag').value;
-  const noteRaw = document.getElementById('note').value.trim();
-
-  const data = {
-    action: 'saveExpense',
-    id: editId || ('local_' + Date.now()),
-    date: document.getElementById('date').value,
-    time: new Date().toTimeString().substring(0, 5),
-    jpy, hkd,
-    cat: selectedCategory,
-    pay: document.getElementById('paymentMethod').value,
-    person: selectedPerson,
-    kind: dayTag,
-    note: `[${dayTag}] ${noteRaw}`
-  };
-
-  if (editId) {
-    const idx = expenses.findIndex(e => e.id === editId);
-    if (idx !== -1) expenses[idx] = data;
-  } else {
-    expenses.unshift(data);
-  }
-
-  localStorage.setItem('japan_expenses', JSON.stringify(expenses));
-  renderAll();
-  closeModal('modalExpense');
-
-  document.getElementById('syncStatus').innerText = '☁️ 正在同步支出...';
-  try {
-    await fetch(API_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
-    document.getElementById('syncStatus').innerText = '☁️ 已同步至 Google Sheet';
-  } catch (e) { document.getElementById('syncStatus').innerText = '⚠️ 同步失敗 (已存本機)'; }
-}
-
-async function saveSchedule() {
-  const title = document.getElementById('schTitle').value.trim();
-  if (!title) return alert('請輸入行程名稱');
-
-  const editId = document.getElementById('schId').value;
-  const data = {
-    action: 'saveSchedule',
-    id: editId || ('sch_' + Date.now()),
-    day: document.getElementById('schDay').value,
-    time: document.getElementById('schTime').value,
-    title: title,
-    location: document.getElementById('schLocation').value.trim()
-  };
-
-  if (editId) {
-    const idx = schedules.findIndex(s => s.id === editId);
-    if (idx !== -1) schedules[idx] = data;
-  } else {
-    schedules.push(data);
-  }
-
-  schedules.sort((a,b) => a.time.localeCompare(b.time));
-  localStorage.setItem('japan_schedules', JSON.stringify(schedules));
-  renderSchedule();
-  closeModal('modalSchedule');
-
-  document.getElementById('syncStatus').innerText = '☁️ 正在同步行程...';
-  try {
-    await fetch(API_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
-    document.getElementById('syncStatus').innerText = '☁️ 已同步至 Google Sheet';
-  } catch (e) { document.getElementById('syncStatus').innerText = '⚠️ 同步失敗 (已存本機)'; }
-}
-
-async function saveNoteItem() {
-  const title = document.getElementById('noteTitle').value.trim();
-  if (!title) return alert('請輸入名稱');
-
-  const editId = document.getElementById('noteId').value;
-  const data = {
-    action: 'saveNote',
-    id: editId || ('note_' + Date.now()),
-    cat: document.getElementById('noteCat').value,
-    title: title,
-    remark: document.getElementById('noteRemark').value.trim()
-  };
-
-  if (editId) {
-    const idx = notesList.findIndex(n => n.id === editId);
-    if (idx !== -1) notesList[idx] = data;
-  } else {
-    notesList.unshift(data);
-  }
-
-  localStorage.setItem('japan_notes', JSON.stringify(notesList));
-  renderNotes();
-  closeModal('modalNote');
-
-  document.getElementById('syncStatus').innerText = '☁️ 正在同步筆記...';
-  try {
-    await fetch(API_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
-    document.getElementById('syncStatus').innerText = '☁️ 已同步至 Google Sheet';
-  } catch (e) { document.getElementById('syncStatus').innerText = '⚠️ 同步失敗 (已存本機)'; }
-}
-
-/* 刪除邏輯 */
-async function deleteExpense(id) {
-  if (!confirm('確定刪除此記帳？')) return;
-  expenses = expenses.filter(e => e.id !== id);
-  localStorage.setItem('japan_expenses', JSON.stringify(expenses));
-  renderAll();
-  
-  // 發送同步刪除 request
-  try {
-    await fetch(API_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'delete', target: 'expense', id: id }) });
-  } catch(e){}
-}
-
-async function deleteSchedule(id) {
-  if (!confirm('確定刪除此行程？')) return;
-  schedules = schedules.filter(s => s.id !== id);
-  localStorage.setItem('japan_schedules', JSON.stringify(schedules));
-  renderSchedule();
-
-  try {
-    await fetch(API_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'delete', target: 'schedule', id: id }) });
-  } catch(e){}
-}
-
-async function deleteNoteItem(id) {
-  if (!confirm('確定刪除此備忘？')) return;
-  notesList = notesList.filter(n => n.id !== id);
-  localStorage.setItem('japan_notes', JSON.stringify(notesList));
-  renderNotes();
-
-  try {
-    await fetch(API_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'delete', target: 'note', id: id }) });
-  } catch(e){}
-}
-
-function filterSchedule(day, btn) {
-  currentSchFilter = day;
-  document.querySelectorAll('#schedule .day-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderSchedule();
-}
-
-function filterNotes(cat, btn) {
-  currentNoteFilter = cat;
-  document.querySelectorAll('#notes .day-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderNotes();
-}
-
-function filterByDay(day, btn) {
-  currentDayFilter = day;
-  document.querySelectorAll('#records .day-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderRecords();
-}
-
-function renderAll() {
-  renderSummary();
-  renderSchedule();
-  renderNotes();
-  renderRecords();
-}
-
-function renderSummary() {
-  let totalHKD = 0, totalJPY = 0, walter = 0, cherry = 0;
-  expenses.forEach(e => {
-    totalHKD += Number(e.hkd || 0);
-    totalJPY += Number(e.jpy || 0);
-    if (e.person === 'Walter') walter += Number(e.hkd || 0);
-    if (e.person === 'Cherry') cherry += Number(e.hkd || 0);
-  });
-
-  document.getElementById('totalHKD').innerText = `HK$${formatNumber(totalHKD)}`;
-  document.getElementById('totalJPY').innerText = `¥${Math.round(totalJPY).toLocaleString()}`;
-  document.getElementById('walterPaid').innerText = `HK$${formatNumber(walter)}`;
-  document.getElementById('cherryPaid').innerText = `HK$${formatNumber(cherry)}`;
-
-  const perPerson = totalHKD / 2;
-  const percent = Math.min((perPerson / TARGET_PER_PERSON) * 100, 100);
-  const remaining = TARGET_PER_PERSON - perPerson;
-
-  document.getElementById('perPersonSpent').innerText = `人均 HK$${formatNumber(perPerson)}`;
-  const barFill = document.getElementById('budgetBarFill');
-  barFill.style.width = `${percent}%`;
-
-  const infoEl = document.getElementById('budgetInfo');
-  if (remaining >= 0) {
-    infoEl.innerText = `剩餘 HK$${formatNumber(remaining)} / 人 (${percent.toFixed(1)}%)`;
-    barFill.style.backgroundColor = percent > 85 ? '#ff9800' : 'var(--progress-fill)';
-  } else {
-    infoEl.innerText = `⚠️ 已超支 HK$${formatNumber(Math.abs(remaining))} / 人 (${percent.toFixed(1)}%)`;
-    barFill.style.backgroundColor = '#e53935';
-  }
-
-  const diff = walter - perPerson;
-  const settlementEl = document.getElementById('settlement');
-  if (Math.abs(diff) < 0.01) {
-    settlementEl.innerHTML = '雙方目前支出完美平衡 ✨';
-  } else if (diff > 0) {
-    settlementEl.innerHTML = `Cherry 補回 <b>HK$${formatNumber(diff)}</b> 給 Walter 即可平分`;
-  } else {
-    settlementEl.innerHTML = `Walter 補回 <b>HK$${formatNumber(Math.abs(diff))}</b> 給 Cherry 即可平分`;
-  }
-}
-
-function renderSchedule() {
-  const container = document.getElementById('scheduleList');
-  const list = schedules.filter(s => s.day === currentSchFilter);
-
-  if (!list.length) return container.innerHTML = '<div class="empty">此天數暫無行程安排，點擊右下角「+」即可新增！</div>';
-
-  list.sort((a,b) => a.time.localeCompare(b.time));
-
-  let html = '<div class="timeline">';
-  html += list.map(s => `
-    <div class="timeline-item">
-      <div class="timeline-dot"></div>
-      <div class="timeline-card">
-        <div class="timeline-header">
-          <span class="timeline-time">⏰ ${s.time}</span>
-          <div class="record-actions">
-            <span class="edit-btn" onclick="editSchedule('${s.id}')">✏️ 編輯</span>
-            <span class="delete-btn" onclick="deleteSchedule('${s.id}')">🗑️ 刪除</span>
+  <div class="container">
+
+    <!-- TAB 1: 記帳 Expense -->
+    <div id="tab-expense" class="tab-content active">
+      <div class="stats-card">
+        <div style="font-size: 0.85rem; opacity: 0.9; text-align: center;">總支出概算</div>
+        <div class="stats-grid">
+          <div class="stats-item">
+            <h4>日圓總額</h4>
+            <p id="totalJPY">¥0</p>
+          </div>
+          <div class="stats-item">
+            <h4>折合港幣</h4>
+            <p id="totalHKD">HK$0.00</p>
           </div>
         </div>
-        <div class="timeline-title">${s.title}</div>
-        ${s.location ? `<div class="timeline-location">📍 ${s.location}</div>` : ''}
+      </div>
+
+      <div class="filter-scroll" id="expenseFilters">
+        <button class="filter-pill active" onclick="filterExpense('ALL')">全部</button>
+        <button class="filter-pill" onclick="filterExpense('機票')">✈️ 機票</button>
+        <button class="filter-pill" onclick="filterExpense('住宿')">🏨 住宿</button>
+        <button class="filter-pill" onclick="filterExpense('餐飲')">美食</button>
+        <button class="filter-pill" onclick="filterExpense('交通')">交通</button>
+        <button class="filter-pill" onclick="filterExpense('購物')">購物</button>
+        <button class="filter-pill" onclick="filterExpense('門票')">門票</button>
+      </div>
+
+      <div class="card" id="expenseList">
+        <div class="empty">加載資料中...</div>
       </div>
     </div>
-  `).join('');
-  html += '</div>';
 
-  container.innerHTML = html;
-}
-
-function renderNotes() {
-  const container = document.getElementById('notesList');
-  let list = notesList;
-  if (currentNoteFilter !== 'ALL') {
-    list = notesList.filter(n => n.cat === currentNoteFilter);
-  }
-
-  if (!list.length) return container.innerHTML = '<div class="empty">暫無口袋名單或筆記，點擊右下角「+」新增！</div>';
-
-  container.innerHTML = list.map(n => `
-    <div class="record">
-      <div class="record-top">
-        <div class="record-note">${n.cat} · ${n.title}</div>
+    <!-- TAB 2: 行程 Schedule -->
+    <div id="tab-schedule" class="tab-content">
+      <div class="filter-scroll" id="scheduleFilters">
+        <button class="filter-pill active" onclick="filterSchedule('Day 1')">Day 1</button>
+        <button class="filter-pill" onclick="filterSchedule('Day 2')">Day 2</button>
+        <button class="filter-pill" onclick="filterSchedule('Day 3')">Day 3</button>
+        <button class="filter-pill" onclick="filterSchedule('Day 4')">Day 4</button>
+        <button class="filter-pill" onclick="filterSchedule('Day 5')">Day 5</button>
       </div>
-      <div class="record-meta">${n.remark || '暫無詳細內容'}</div>
-      <div class="record-actions">
-        <span class="delete-btn" onclick="deleteNoteItem('${n.id}')">🗑 刪除</span>
+
+      <div id="scheduleList">
+        <div class="empty">加載行程中...</div>
       </div>
     </div>
-  `).join('');
-}
 
-function renderRecords() {
-  const container = document.getElementById('recordList');
-  let list = expenses;
-  if (currentDayFilter !== 'ALL') {
-    list = expenses.filter(e => e.kind === currentDayFilter || (e.note && e.note.includes(`[${currentDayFilter}]`)));
-  }
-
-  const dayTotal = list.reduce((s, e) => s + Number(e.hkd || 0), 0);
-  document.getElementById('daySummary').innerText = `${currentDayFilter === 'ALL' ? '全部' : currentDayFilter} 共 ${list.length} 筆，小計 HK$${formatNumber(dayTotal)}`;
-
-  if (!list.length) return container.innerHTML = '<div class="empty">此天數暫無紀錄</div>';
-
-  container.innerHTML = list.map(e => `
-    <div class="record">
-      <div class="record-top">
-        <div class="record-note">${e.note || e.cat}</div>
-        <div class="record-amount">HK$${formatNumber(e.hkd)}</div>
-      </div>
-      <div class="record-meta">
-        ¥${Math.round(Number(e.jpy || 0)).toLocaleString()} · ${e.cat} · ${e.pay}<br>
-        ${e.person} 付款 · ${e.date}
-      </div>
-      <div class="record-actions">
-        <span class="edit-btn" onclick="editExpense('${e.id}')">✏️ 編輯</span>
-        <span class="delete-btn" onclick="deleteExpense('${e.id}')">🗑️ 刪除</span>
+    <!-- TAB 3: 備忘 Notes -->
+    <div id="tab-notes" class="tab-content">
+      <div class="card" id="notesList">
+        <div class="empty">加載備忘錄中...</div>
       </div>
     </div>
-  `).join('');
-}
 
-function renderChart() {
-  const cats = {};
-  expenses.forEach(e => cats[e.cat] = (cats[e.cat] || 0) + Number(e.hkd || 0));
+  </div>
 
-  const labels = Object.keys(cats);
-  const series = Object.values(cats);
+  <!-- Floating Add Button -->
+  <button class="fab" onclick="openAddModal()">+</button>
 
-  if (categoryChart) categoryChart.destroy();
+  <!-- Add/Edit Modal Form -->
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalTitle">新增資料</h3>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
 
-  const options = {
-    series: series,
-    labels: labels,
-    chart: { type: 'donut', height: 270 },
-    legend: { position: 'bottom' },
-    dataLabels: { enabled: true, formatter: (val) => val.toFixed(0) + '%' }
-  };
+      <form id="mainForm" onsubmit="handleFormSubmit(event)">
+        <input type="hidden" id="editId">
+        <input type="hidden" id="formType">
 
-  categoryChart = new ApexCharts(document.querySelector("#chartCategory"), options);
-  categoryChart.render();
-}
-</script>
+        <!-- Expense Fields -->
+        <div id="formFieldsExpense">
+          <div class="form-row">
+            <div class="form-group">
+              <label>日期</label>
+              <input type="date" id="expDate" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label>時間</label>
+              <input type="time" id="expTime" class="form-control">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>日圓 (JPY)</label>
+              <input type="number" id="expJpy" class="form-control" placeholder="0" oninput="calcHKD()">
+            </div>
+            <div class="form-group">
+              <label>港幣 (HKD)</label>
+              <input type="number" step="0.01" id="expHkd" class="form-control" placeholder="0.00">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>類別</label>
+              <select id="expCat" class="form-control">
+                <option value="✈️ 機票">✈️ 機票</option>
+                <option value="🏨 住宿">🏨 住宿</option>
+                <option value="🍜 美食">🍜 美食</option>
+                <option value="🚃 交通">🚃 交通</option>
+                <option value="🛍️ 購物">🛍️ 購物</option>
+                <option value="🎟️ 門票">🎟️ 門票</option>
+                <option value="💡 其他">💡 其他</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>付款方式</label>
+              <select id="expPay" class="form-control">
+                <option value="💳 Visa">💳 Visa</option>
+                <option value="💵 現金">💵 現金</option>
+                <option value="🐧 Suica/PayPay">🐧 Suica/PayPay</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>付款人</label>
+              <input type="text" id="expPerson" class="form-control" placeholder="例：Cherry">
+            </div>
+            <div class="form-group">
+              <label>費用類型</label>
+              <input type="text" id="expKind" class="form-control" placeholder="例：事前/公用">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>備註</label>
+            <input type="text" id="expNote" class="form-control" placeholder="備註細節">
+          </div>
+        </div>
+
+        <!-- Schedule Fields -->
+        <div id="formFieldsSchedule" style="display: none;">
+          <div class="form-row">
+            <div class="form-group">
+              <label>天數</label>
+              <select id="schDay" class="form-control">
+                <option value="Day 1">Day 1</option>
+                <option value="Day 2">Day 2</option>
+                <option value="Day 3">Day 3</option>
+                <option value="Day 4">Day 4</option>
+                <option value="Day 5">Day 5</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>時間</label>
+              <input type="time" id="schTime" class="form-control" value="09:00">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>行程名稱</label>
+            <input type="text" id="schTitle" class="form-control" placeholder="例：成田機場搭 Skyliner" required>
+          </div>
+          <div class="form-group">
+            <label>地點 / 連結</label>
+            <input type="text" id="schLocation" class="form-control" placeholder="例：上野站 / Google Map 連結">
+          </div>
+        </div>
+
+        <!-- Notes Fields -->
+        <div id="formFieldsNote" style="display: none;">
+          <div class="form-group">
+            <label>分類</label>
+            <input type="text" id="noteCat" class="form-control" placeholder="例：必買清單 / 注意事項">
+          </div>
+          <div class="form-group">
+            <label>標題</label>
+            <input type="text" id="noteTitle" class="form-control" placeholder="項目標題" required>
+          </div>
+          <div class="form-group">
+            <label>詳細內容</label>
+            <textarea id="noteRemark" class="form-control" rows="3" placeholder="詳細內容..."></textarea>
+          </div>
+        </div>
+
+        <button type="submit" class="btn">儲存並同步</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // ⚠️️ 替換成你的 Google Apps Script Web App URL
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyf2v6G7J3R1vYv-3W5e2R_eH_43JpW4V5aE9-x02VfX/exec'; 
+
+    let currentTab = 'expense';
+    let expenses = [];
+    let schedules = [];
+    let notes = [];
+
+    let currentExpFilter = 'ALL';
+    let currentSchFilter = 'Day 1';
+
+    // 匯率預設 JPY -> HKD
+    const RATE = 0.052;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchData();
+      // 設置預設日期
+      document.getElementById('expDate').value = new Date().toISOString().split('T')[0];
+    });
+
+    // 1. Fetch Data
+    function fetchData() {
+      fetch(SCRIPT_URL)
+        .then(res => res.json())
+        .then(data => {
+          if(data.status === 'success' || data.expenses) {
+            expenses = data.expenses || [];
+            schedules = data.schedules || [];
+            notes = data.notes || [];
+
+            renderExpense();
+            renderSchedule();
+            renderNotes();
+          }
+        })
+        .catch(err => console.error('Fetch Error:', err));
+    }
+
+    // 2. Tab Switch
+    function switchTab(tab) {
+      currentTab = tab;
+      document.querySelectorAll('.nav-btn').forEach((btn, idx) => {
+        btn.classList.toggle('active', (tab === 'expense' && idx === 0) || (tab === 'schedule' && idx === 1) || (tab === 'notes' && idx === 2));
+      });
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.getElementById(`tab-${tab}`).classList.add('active');
+    }
+
+    // 3. Render Expense
+    function renderExpense() {
+      const container = document.getElementById('expenseList');
+      let list = expenses;
+
+      if (currentExpFilter !== 'ALL') {
+        list = expenses.filter(e => e.cat.includes(currentExpFilter));
+      }
+
+      // 計算總金額
+      let totalJpy = 0;
+      let totalHkd = 0;
+      expenses.forEach(e => {
+        totalJpy += Number(e.jpy) || 0;
+        totalHkd += Number(e.hkd) || 0;
+      });
+
+      document.getElementById('totalJPY').innerText = `¥${totalJpy.toLocaleString()}`;
+      document.getElementById('totalHKD').innerText = `HK$${totalHkd.toFixed(2)}`;
+
+      if (!list.length) return container.innerHTML = '<div class="empty">暫無記帳紀錄</div>';
+
+      container.innerHTML = list.map(e => `
+        <div class="record-item">
+          <div class="record-info">
+            <h3>${e.cat} - ${e.note || e.kind || '無備註'}</h3>
+            <p>📅 ${e.date} | 💳 ${e.pay} (${e.person || '未填'})</p>
+            <div class="record-actions">
+              <span class="edit-btn" onclick="editExpense('${e.id}')">✏️ 編輯</span>
+              <span class="delete-btn" onclick="deleteRecord('${e.id}', 'expense')">🗑️ 刪除</span>
+            </div>
+          </div>
+          <div class="record-amount">
+            <div class="amount-jpy">¥${(Number(e.jpy)||0).toLocaleString()}</div>
+            <div class="amount-hkd">HK$${Number(e.hkd||0).toFixed(2)}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function filterExpense(cat) {
+      currentExpFilter = cat;
+      document.querySelectorAll('#expenseFilters .filter-pill').forEach(btn => {
+        btn.classList.toggle('active', btn.innerText.includes(cat) || (cat === 'ALL' && btn.innerText === '全部'));
+      });
+      renderExpense();
+    }
+
+    // 4. Render Schedule (修復時間 1899-12-30T... 格式問題)
+    function renderSchedule() {
+      const container = document.getElementById('scheduleList');
+      const list = schedules.filter(s => s.day === currentSchFilter);
+
+      if (!list.length) return container.innerHTML = '<div class="empty">此天數暫無行程安排，點擊右下角「+」即可新增！</div>';
+
+      // 格式化時間，避免出現 1899-12-30T01:38:18...
+      function formatScheduleTime(timeStr) {
+        if (!timeStr) return '09:00';
+        let str = String(timeStr);
+        if (str.includes('T')) {
+          const timePart = str.split('T')[1];
+          return timePart.substring(0, 5);
+        }
+        return str.substring(0, 5);
+      }
+
+      // 按時間排序
+      list.sort((a, b) => formatScheduleTime(a.time).localeCompare(formatScheduleTime(b.time)));
+
+      let html = '<div class="timeline">';
+      html += list.map(s => {
+        const cleanTime = formatScheduleTime(s.time);
+        return `
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-card">
+              <div class="timeline-header">
+                <span class="timeline-time">⏰ ${cleanTime}</span>
+                <div class="record-actions">
+                  <span class="edit-btn" onclick="editSchedule('${s.id}')">✏️ 編輯</span>
+                  <span class="delete-btn" onclick="deleteRecord('${s.id}', 'schedule')">🗑️ 刪除</span>
+                </div>
+              </div>
+              <div class="timeline-title">${s.title}</div>
+              ${s.location ? `<div class="timeline-location">📍 ${s.location}</div>` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+      html += '</div>';
+
+      container.innerHTML = html;
+    }
+
+    function filterSchedule(day) {
+      currentSchFilter = day;
+      document.querySelectorAll('#scheduleFilters .filter-pill').forEach(btn => {
+        btn.classList.toggle('active', btn.innerText === day);
+      });
+      renderSchedule();
+    }
+
+    // 5. Render Notes
+    function renderNotes() {
+      const container = document.getElementById('notesList');
+      if (!notes.length) return container.innerHTML = '<div class="empty">暫無備忘事項</div>';
+
+      container.innerHTML = notes.map(n => `
+        <div class="record-item">
+          <div class="record-info" style="width: 100%;">
+            <h3>[${n.cat || '一般'}] ${n.title}</h3>
+            <p>${n.remark || ''}</p>
+            <div class="record-actions" style="margin-top: 5px;">
+              <span class="delete-btn" onclick="deleteRecord('${n.id}', 'note')">🗑️ 刪除</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // 6. Modal Operations
+    function openAddModal() {
+      document.getElementById('editId').value = '';
+      document.getElementById('formType').value = currentTab;
+      document.getElementById('modalTitle').innerText = `新增${currentTab === 'expense' ? '記帳' : currentTab === 'schedule' ? '行程' : '備忘'}`;
+
+      document.getElementById('formFieldsExpense').style.display = currentTab === 'expense' ? 'block' : 'none';
+      document.getElementById('formFieldsSchedule').style.display = currentTab === 'schedule' ? 'block' : 'none';
+      document.getElementById('formFieldsNote').style.display = currentTab === 'notes' ? 'block' : 'none';
+
+      document.getElementById('modal').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('modal').classList.remove('active');
+    }
+
+    function calcHKD() {
+      const jpy = parseFloat(document.getElementById('expJpy').value) || 0;
+      document.getElementById('expHkd').value = (jpy * RATE).toFixed(2);
+    }
+
+    // 7. Edit Functions
+    function editExpense(id) {
+      const item = expenses.find(e => String(e.id) === String(id));
+      if (!item) return;
+
+      document.getElementById('editId').value = item.id;
+      document.getElementById('formType').value = 'expense';
+      document.getElementById('expDate').value = item.date;
+      document.getElementById('expTime').value = item.time;
+      document.getElementById('expJpy').value = item.jpy;
+      document.getElementById('expHkd').value = item.hkd;
+      document.getElementById('expCat').value = item.cat;
+      document.getElementById('expPay').value = item.pay;
+      document.getElementById('expPerson').value = item.person;
+      document.getElementById('expKind').value = item.kind;
+      document.getElementById('expNote').value = item.note;
+
+      document.getElementById('modalTitle').innerText = '編輯記帳';
+      document.getElementById('formFieldsExpense').style.display = 'block';
+      document.getElementById('formFieldsSchedule').style.display = 'none';
+      document.getElementById('formFieldsNote').style.display = 'none';
+      document.getElementById('modal').classList.add('active');
+    }
+
+    function editSchedule(id) {
+      const item = schedules.find(s => String(s.id) === String(id));
+      if (!item) return;
+
+      document.getElementById('editId').value = item.id;
+      document.getElementById('formType').value = 'schedule';
+      document.getElementById('schDay').value = item.day;
+      
+      let cleanTime = String(item.time);
+      if (cleanTime.includes('T')) cleanTime = cleanTime.split('T')[1].substring(0, 5);
+      document.getElementById('schTime').value = cleanTime.substring(0, 5);
+      
+      document.getElementById('schTitle').value = item.title;
+      document.getElementById('schLocation').value = item.location;
+
+      document.getElementById('modalTitle').innerText = '編輯行程';
+      document.getElementById('formFieldsExpense').style.display = 'none';
+      document.getElementById('formFieldsSchedule').style.display = 'block';
+      document.getElementById('formFieldsNote').style.display = 'none';
+      document.getElementById('modal').classList.add('active');
+    }
+
+    // 8. Submit Form (Save to Google Sheet)
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      const type = document.getElementById('formType').value;
+      const id = document.getElementById('editId').value || 'local_' + Date.now();
+
+      let payload = { id: id };
+
+      if (type === 'expense') {
+        payload.action = 'saveExpense';
+        payload.date = document.getElementById('expDate').value;
+        payload.time = document.getElementById('expTime').value || '00:00';
+        payload.jpy = document.getElementById('expJpy').value || 0;
+        payload.hkd = document.getElementById('expHkd').value || 0;
+        payload.cat = document.getElementById('expCat').value;
+        payload.pay = document.getElementById('expPay').value;
+        payload.person = document.getElementById('expPerson').value;
+        payload.kind = document.getElementById('expKind').value;
+        payload.note = document.getElementById('expNote').value;
+      } else if (type === 'schedule') {
+        payload.action = 'saveSchedule';
+        payload.day = document.getElementById('schDay').value;
+        payload.time = document.getElementById('schTime').value;
+        payload.title = document.getElementById('schTitle').value;
+        payload.location = document.getElementById('schLocation').value;
+      } else if (type === 'notes') {
+        payload.action = 'saveNote';
+        payload.cat = document.getElementById('noteCat').value || '一般';
+        payload.title = document.getElementById('noteTitle').value;
+        payload.remark = document.getElementById('noteRemark').value;
+      }
+
+      closeModal();
+
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }).then(() => {
+        setTimeout(fetchData, 1000); // 1秒後刷新數據
+      });
+    }
+
+    // 9. Delete Item
+    function deleteRecord(id, target) {
+      if (!confirm('確定要刪除這筆資料嗎？')) return;
+
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'delete', id: id, target: target })
+      }).then(() => {
+        setTimeout(fetchData, 1000);
+      });
+    }
+  </script>
 </body>
 </html>
