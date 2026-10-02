@@ -221,7 +221,7 @@
     <div class="day-filter">
       <button class="day-btn active" onclick="filterNotes('ALL', this)">全部</button>
       <button class="day-btn" onclick="filterNotes('🍜 美食', this)">🍜 美食</button>
-      <button class="day-btn" onclick="filterNotes('🛍️ 必買', this)">🛍️ 必買</button>
+      <button class="day-btn" onclick="filterNotes('🛍️ 必買', this)">🛍️️ 必買</button>
       <button class="day-btn" onclick="filterNotes('🎫 景點', this)">🎫 景點</button>
       <button class="day-btn" onclick="filterNotes('📝 筆記', this)">📝 筆記</button>
     </div>
@@ -424,15 +424,42 @@ function handleFabClick() {
 }
 
 /* Modal 控制 */
-function openExpenseModal() {
-  document.getElementById('editId').value = '';
-  document.getElementById('modalTitle').innerText = '新增支出';
-  document.getElementById('date').value = new Date().toISOString().split('T')[0];
-  document.getElementById('itemRate').value = document.getElementById('baseRate').value;
-  document.getElementById('amount').value = '';
-  document.getElementById('note').value = '';
+function openExpenseModal(data = null) {
+  if (data) {
+    document.getElementById('modalTitle').innerText = '編輯支出';
+    document.getElementById('editId').value = data.id;
+    document.getElementById('amount').value = data.jpy || data.hkd;
+    document.getElementById('currencyType').value = data.jpy ? 'JPY' : 'HKD';
+    document.getElementById('date').value = data.date || new Date().toISOString().split('T')[0];
+    document.getElementById('dayTag').value = data.kind || 'Day 1';
+    document.getElementById('paymentMethod').value = data.pay || '💴 Cash (現金)';
+    
+    let cleanNote = data.note || '';
+    cleanNote = cleanNote.replace(/\[.*?\]\s*/, '');
+    document.getElementById('note').value = cleanNote;
+
+    // 選擇對應的誰付款
+    const personBtns = document.querySelectorAll('.choice');
+    personBtns.forEach(btn => {
+      if (btn.dataset.person === data.person) {
+        selectPerson(btn);
+      }
+    });
+  } else {
+    document.getElementById('editId').value = '';
+    document.getElementById('modalTitle').innerText = '新增支出';
+    document.getElementById('date').value = new Date().toISOString().split('T')[0];
+    document.getElementById('itemRate').value = document.getElementById('baseRate').value;
+    document.getElementById('amount').value = '';
+    document.getElementById('note').value = '';
+  }
   updateConversion();
   document.getElementById('modalExpense').classList.add('show');
+}
+
+function editExpense(id) {
+  const item = expenses.find(e => e.id === id);
+  if (item) openExpenseModal(item);
 }
 
 function openScheduleModal(data = null) {
@@ -527,7 +554,7 @@ function loadLocalStorage() {
 }
 
 async function syncWithServer() {
-  document.getElementById('syncStatus').innerText = '☁️️ 同步中...';
+  document.getElementById('syncStatus').innerText = '☁ 同步中...';
   try {
     const res = await fetch(API_URL);
     const data = await res.json();
@@ -554,8 +581,11 @@ async function saveExpense() {
   const editId = document.getElementById('editId').value;
   const currency = document.getElementById('currencyType').value;
   const rate = Number(document.getElementById('itemRate').value) || 0.0497;
-  const jpy = (currency === 'JPY') ? amount : (amount / rate);
-  const hkd = (currency === 'JPY') ? (amount * rate) : amount;
+  
+  // 日圓四捨五入成整數，港幣保留兩位小數
+  const jpy = (currency === 'JPY') ? Math.round(amount) : Math.round(amount / rate);
+  const hkd = (currency === 'JPY') ? Number((amount * rate).toFixed(2)) : Number(amount.toFixed(2));
+  
   const dayTag = document.getElementById('dayTag').value;
   const noteRaw = document.getElementById('note').value.trim();
 
@@ -654,18 +684,39 @@ async function saveNoteItem() {
   } catch (e) { document.getElementById('syncStatus').innerText = '⚠️ 同步失敗 (已存本機)'; }
 }
 
-function deleteSchedule(id) {
+/* 刪除邏輯 */
+async function deleteExpense(id) {
+  if (!confirm('確定刪除此記帳？')) return;
+  expenses = expenses.filter(e => e.id !== id);
+  localStorage.setItem('japan_expenses', JSON.stringify(expenses));
+  renderAll();
+  
+  // 發送同步刪除 request
+  try {
+    await fetch(API_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'delete', target: 'expense', id: id }) });
+  } catch(e){}
+}
+
+async function deleteSchedule(id) {
   if (!confirm('確定刪除此行程？')) return;
   schedules = schedules.filter(s => s.id !== id);
   localStorage.setItem('japan_schedules', JSON.stringify(schedules));
   renderSchedule();
+
+  try {
+    await fetch(API_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'delete', target: 'schedule', id: id }) });
+  } catch(e){}
 }
 
-function deleteNoteItem(id) {
+async function deleteNoteItem(id) {
   if (!confirm('確定刪除此備忘？')) return;
   notesList = notesList.filter(n => n.id !== id);
   localStorage.setItem('japan_notes', JSON.stringify(notesList));
   renderNotes();
+
+  try {
+    await fetch(API_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'delete', target: 'note', id: id }) });
+  } catch(e){}
 }
 
 function filterSchedule(day, btn) {
@@ -809,8 +860,12 @@ function renderRecords() {
         <div class="record-amount">HK$${formatNumber(e.hkd)}</div>
       </div>
       <div class="record-meta">
-        ¥${Math.round(e.jpy).toLocaleString()} · ${e.cat} · ${e.pay}<br>
+        ¥${Math.round(Number(e.jpy || 0)).toLocaleString()} · ${e.cat} · ${e.pay}<br>
         ${e.person} 付款 · ${e.date}
+      </div>
+      <div class="record-actions">
+        <span class="edit-btn" onclick="editExpense('${e.id}')">✏️ 編輯</span>
+        <span class="delete-btn" onclick="deleteExpense('${e.id}')">🗑️ 刪除</span>
       </div>
     </div>
   `).join('');
