@@ -17,6 +17,8 @@
       --border-color: #e5e2d9;
       --input-bg: #ffffff;
       --accent-card: #f0f4f1;
+      --progress-bg: #e0ded5;
+      --progress-fill: #617c6d;
     }
 
     [data-theme="dark"] {
@@ -29,6 +31,8 @@
       --border-color: #333333;
       --input-bg: #2a2a2a;
       --accent-card: #1c2822;
+      --progress-bg: #333333;
+      --progress-fill: #7a9e8c;
     }
 
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -40,7 +44,7 @@
     .sync-status { font-size: 11px; opacity: .8; margin-top: 3px; }
     .theme-btn { background: rgba(255,255,255,0.2); border: none; color: white; padding: 6px 12px; border-radius: 20px; font-size: 14px; cursor: pointer; }
 
-    /* 🔍 放大後的即時換算區塊 */
+    /* 即時換算區塊 */
     .currency { background: var(--card-bg); margin: 14px; padding: 18px 20px; border-radius: 18px; box-shadow: 0 4px 16px rgba(0,0,0,.06); border: 1px solid var(--border-color); }
     .currency-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 15px; font-weight: bold; color: var(--text-main); }
     .currency-row { display: flex; gap: 10px; align-items: center; }
@@ -48,7 +52,7 @@
     .currency input:focus { border-color: var(--primary-light); }
     .currency-arrow { font-size: 20px; color: var(--text-sub); font-weight: bold; }
     
-    /* 📌 放大且帶 Icon 的 Tab 選單 */
+    /* Tab 選單 */
     .tabs { display: flex; background: var(--card-bg); border-bottom: 2px solid var(--border-color); position: sticky; top: 62px; z-index: 15; box-shadow: 0 2px 8px rgba(0,0,0,.03); }
     .tab { flex: 1; text-align: center; padding: 14px 6px; font-size: 16px; font-weight: 600; color: var(--text-sub); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s; }
     .tab.active { color: var(--primary-light); font-weight: 800; border-bottom: 4px solid var(--primary-light); font-size: 17px; background: rgba(97, 124, 109, 0.05); }
@@ -61,6 +65,13 @@
     .total-label { color: var(--text-sub); font-size: 13px; }
     .total-hkd { font-size: 38px; font-weight: 800; margin-top: 4px; color: var(--text-main); }
     .total-jpy { font-size: 15px; color: var(--text-sub); margin-top: 2px; }
+
+    /* 🎯 預算進度條樣式 */
+    .budget-section { margin-top: 14px; pt: 10px; border-top: 1px dashed var(--border-color); }
+    .budget-title { display: flex; justify-content: space-between; font-size: 13px; font-weight: bold; margin-bottom: 6px; }
+    .budget-bar-bg { width: 100%; height: 12px; background: var(--progress-bg); border-radius: 10px; overflow: hidden; }
+    .budget-bar-fill { height: 100%; background: var(--progress-fill); width: 0%; transition: width 0.4s ease, background-color 0.3s; }
+    .budget-info { font-size: 12px; color: var(--text-sub); margin-top: 6px; text-align: right; }
     
     .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .mini { background: var(--bg-color); border-radius: 13px; padding: 14px; }
@@ -127,7 +138,7 @@
     <button class="theme-btn" onclick="toggleTheme()">🌙 / ☀️</button>
   </header>
 
-  <!-- 🔍 放大版即時換算區 -->
+  <!-- 即時換算區 -->
   <div class="currency">
     <div class="currency-header">
       <span>💴 即時匯率換算</span>
@@ -142,7 +153,7 @@
     </div>
   </div>
 
-  <!-- 📌 大字體 + Icon 的 Tab 選單 -->
+  <!-- Tab 選單 -->
   <div class="tabs">
     <div class="tab active" onclick="showPage('summary', this)">
       <span class="tab-icon">🏠</span> 總覽
@@ -161,6 +172,18 @@
       <div class="total-label">全行程總支出</div>
       <div class="total-hkd" id="totalHKD">HK$0.00</div>
       <div class="total-jpy" id="totalJPY">¥0</div>
+
+      <!-- 🎯 每人 $10,000 預算監控進度條 -->
+      <div class="budget-section">
+        <div class="budget-title">
+          <span>🎯 每人預算目標 (HK$10,000)</span>
+          <span id="perPersonSpent">人均 HK$0.00</span>
+        </div>
+        <div class="budget-bar-bg">
+          <div class="budget-bar-fill" id="budgetBarFill"></div>
+        </div>
+        <div class="budget-info" id="budgetInfo">剩餘 HK$10,000.00 / 人</div>
+      </div>
     </div>
     
     <div class="card">
@@ -171,7 +194,7 @@
       </div>
     </div>
 
-    <!-- 簡潔的對帳結算區 -->
+    <!-- 對帳結算區 -->
     <div class="settlement-card">
       <div class="settlement-title">🤝 旅程結算帳單</div>
       <div class="settlement-text" id="settlement">計算中...</div>
@@ -234,7 +257,7 @@
     <div class="cat-grid" id="catGrid">
       <div class="cat-chip selected" onclick="selectCat('🍜 食物', this)">🍜 食物</div>
       <div class="cat-chip" onclick="selectCat('☕ 飲品', this)">☕ 飲品</div>
-      <div class="cat-chip" onclick="selectCat('🛍️ 購物', this)">🛍️ 購物</div>
+      <div class="cat-chip" onclick="selectCat('🛍️️ 購物', this)">🛍️ 購物</div>
       <div class="cat-chip" onclick="selectCat('🚆 交通', this)">🚆 交通</div>
       <div class="cat-chip" onclick="selectCat('🏨 住宿', this)">🏨 住宿</div>
       <div class="cat-chip" onclick="selectCat('🎫 景點', this)">🎫 景點</div>
@@ -282,6 +305,7 @@
 
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycbyGC_wo7E5jVk-O-GVd_38BLGn6r13uxMKy265hyOt6SjeGwv4WdK-3EDE_LwBa4efpEw/exec';
+const TARGET_PER_PERSON = 10000; // 每人目標預算 HKD 10,000
 
 let expenses = [];
 let selectedPerson = 'Walter';
@@ -301,7 +325,6 @@ function toggleTheme() {
   document.documentElement.setAttribute('data-theme', target);
 }
 
-// 💱 自動抓取即時匯率
 async function fetchExchangeRate() {
   try {
     const res = await fetch('https://open.er-api.com/v6/latest/JPY');
@@ -485,7 +508,26 @@ function renderSummary() {
   document.getElementById('walterPaid').innerText = `HK$${formatNumber(walter)}`;
   document.getElementById('cherryPaid').innerText = `HK$${formatNumber(cherry)}`;
 
-  const diff = walter - (totalHKD / 2);
+  // 🎯 計算每人平均支出與進度條
+  const perPerson = totalHKD / 2;
+  const percent = Math.min((perPerson / TARGET_PER_PERSON) * 100, 100);
+  const remaining = TARGET_PER_PERSON - perPerson;
+
+  document.getElementById('perPersonSpent').innerText = `人均 HK$${formatNumber(perPerson)}`;
+  const barFill = document.getElementById('budgetBarFill');
+  barFill.style.width = `${percent}%`;
+
+  const infoEl = document.getElementById('budgetInfo');
+  if (remaining >= 0) {
+    infoEl.innerText = `剩餘 HK$${formatNumber(remaining)} / 人 (${percent.toFixed(1)}%)`;
+    barFill.style.backgroundColor = percent > 85 ? '#ff9800' : 'var(--progress-fill)';
+  } else {
+    infoEl.innerText = `⚠️ 已超支 HK$${formatNumber(Math.abs(remaining))} / 人 (${percent.toFixed(1)}%)`;
+    barFill.style.backgroundColor = '#e53935';
+  }
+
+  // 結算帳單
+  const diff = walter - perPerson;
   const settlementEl = document.getElementById('settlement');
   if (Math.abs(diff) < 0.01) {
     settlementEl.innerHTML = '雙方目前支出完美平衡 ✨';
