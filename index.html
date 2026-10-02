@@ -66,7 +66,7 @@
     .total-jpy { font-size: 15px; color: var(--text-sub); margin-top: 2px; }
 
     /* 預算進度條樣式 */
-    .budget-section { margin-top: 14px; pt: 10px; border-top: 1px dashed var(--border-color); }
+    .budget-section { margin-top: 14px; padding-top: 10px; border-top: 1px dashed var(--border-color); }
     .budget-title { display: flex; justify-content: space-between; font-size: 13px; font-weight: bold; margin-bottom: 6px; }
     .budget-bar-bg { width: 100%; height: 12px; background: var(--progress-bg); border-radius: 10px; overflow: hidden; }
     .budget-bar-fill { height: 100%; background: var(--progress-fill); width: 0%; transition: width 0.4s ease, background-color 0.3s; }
@@ -90,13 +90,17 @@
     .record-actions { margin-top: 8px; display: flex; gap: 14px; font-size: 12px; }
     .edit-btn { color: var(--primary-light); font-weight: bold; cursor: pointer; }
     .delete-btn { color: #e53935; cursor: pointer; }
-    
-    /* 時間表樣式 */
-    .schedule-item { display: flex; gap: 12px; background: var(--card-bg); border-radius: 14px; padding: 14px; margin-bottom: 10px; border: 1px solid var(--border-color); position: relative; }
-    .schedule-time { font-weight: 800; font-size: 14px; color: var(--primary-light); min-width: 55px; }
-    .schedule-content { flex: 1; }
-    .schedule-title { font-weight: bold; font-size: 15px; margin-bottom: 4px; }
-    .schedule-sub { font-size: 12px; color: var(--text-sub); }
+
+    /* 時間軸 Timeline 設計 */
+    .timeline { position: relative; padding-left: 20px; margin-top: 10px; }
+    .timeline::before { content: ''; position: absolute; left: 6px; top: 12px; bottom: 12px; width: 2px; background: var(--border-color); }
+    .timeline-item { position: relative; margin-bottom: 16px; }
+    .timeline-dot { position: absolute; left: -20px; top: 16px; width: 10px; height: 10px; border-radius: 50%; background: var(--primary-light); border: 2px solid var(--bg-color); box-shadow: 0 0 0 2px var(--primary-light); }
+    .timeline-card { background: var(--card-bg); border-radius: 14px; padding: 14px 16px; border: 1px solid var(--border-color); box-shadow: 0 2px 8px rgba(0,0,0,.03); }
+    .timeline-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .timeline-time { font-size: 14px; font-weight: 800; color: var(--primary-light); background: rgba(97, 124, 109, 0.1); padding: 2px 8px; border-radius: 6px; }
+    .timeline-title { font-size: 15px; font-weight: bold; color: var(--text-main); margin-top: 4px; }
+    .timeline-location { font-size: 13px; color: var(--text-sub); margin-top: 6px; line-height: 1.4; white-space: pre-line; }
 
     .settlement-card { background: var(--accent-card); border: 1px dashed var(--primary-light); border-radius: 18px; padding: 18px; margin-top: 16px; }
     .settlement-title { font-size: 15px; font-weight: bold; color: var(--primary-light); margin-bottom: 8px; }
@@ -130,9 +134,6 @@
     .choice { flex: 1; border: 1px solid var(--border-color); background: var(--card-bg); border-radius: 11px; padding: 11px; text-align: center; cursor: pointer; }
     .choice.selected { background: var(--primary); color: white; border-color: var(--primary); font-weight: bold; }
     .save { width: 100%; margin-top: 18px; padding: 14px; border: none; border-radius: 13px; background: var(--primary); color: white; font-size: 16px; font-weight: bold; cursor: pointer; }
-    
-    .loading { position: fixed; inset: 0; background: rgba(0,0,0,.4); color: white; display: none; align-items: center; justify-content: center; z-index: 200; font-weight: bold; }
-    .loading.show { display: flex; }
   </style>
 </head>
 <body>
@@ -321,7 +322,7 @@
 <!-- 行程 Modal -->
 <div class="modal-bg" id="modalSchedule">
   <div class="modal">
-    <div class="modal-header"><h2>新增行程時間點</h2><div class="close" onclick="closeModal('modalSchedule')">×</div></div>
+    <div class="modal-header"><h2 id="schModalTitle">新增行程時間點</h2><div class="close" onclick="closeModal('modalSchedule')">×</div></div>
     <input type="hidden" id="schId" value="">
     <label>天數</label>
     <select id="schDay">
@@ -434,12 +435,28 @@ function openExpenseModal() {
   document.getElementById('modalExpense').classList.add('show');
 }
 
-function openScheduleModal() {
-  document.getElementById('schId').value = '';
-  document.getElementById('schDay').value = currentSchFilter;
-  document.getElementById('schTitle').value = '';
-  document.getElementById('schLocation').value = '';
+function openScheduleModal(data = null) {
+  if (data) {
+    document.getElementById('schModalTitle').innerText = '編輯行程';
+    document.getElementById('schId').value = data.id;
+    document.getElementById('schDay').value = data.day;
+    document.getElementById('schTime').value = data.time;
+    document.getElementById('schTitle').value = data.title;
+    document.getElementById('schLocation').value = data.location || '';
+  } else {
+    document.getElementById('schModalTitle').innerText = '新增行程時間點';
+    document.getElementById('schId').value = '';
+    document.getElementById('schDay').value = currentSchFilter;
+    document.getElementById('schTime').value = '09:00';
+    document.getElementById('schTitle').value = '';
+    document.getElementById('schLocation').value = '';
+  }
   document.getElementById('modalSchedule').classList.add('show');
+}
+
+function editSchedule(id) {
+  const item = schedules.find(s => s.id === id);
+  if (item) openScheduleModal(item);
 }
 
 function openNoteModal() {
@@ -510,7 +527,7 @@ function loadLocalStorage() {
 }
 
 async function syncWithServer() {
-  document.getElementById('syncStatus').innerText = '☁️ 同步中...';
+  document.getElementById('syncStatus').innerText = '☁️️ 同步中...';
   try {
     const res = await fetch(API_URL);
     const data = await res.json();
@@ -529,7 +546,7 @@ async function syncWithServer() {
   }
 }
 
-/* 儲存資料 */
+/* 儲存資料與同步 */
 async function saveExpense() {
   const amount = Number(document.getElementById('amount').value);
   if (!amount || amount <= 0) return alert('請輸入金額');
@@ -543,6 +560,7 @@ async function saveExpense() {
   const noteRaw = document.getElementById('note').value.trim();
 
   const data = {
+    action: 'saveExpense',
     id: editId || ('local_' + Date.now()),
     date: document.getElementById('date').value,
     time: new Date().toTimeString().substring(0, 5),
@@ -564,14 +582,21 @@ async function saveExpense() {
   localStorage.setItem('japan_expenses', JSON.stringify(expenses));
   renderAll();
   closeModal('modalExpense');
+
+  document.getElementById('syncStatus').innerText = '☁️ 正在同步支出...';
+  try {
+    await fetch(API_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+    document.getElementById('syncStatus').innerText = '☁️ 已同步至 Google Sheet';
+  } catch (e) { document.getElementById('syncStatus').innerText = '⚠️ 同步失敗 (已存本機)'; }
 }
 
-function saveSchedule() {
+async function saveSchedule() {
   const title = document.getElementById('schTitle').value.trim();
   if (!title) return alert('請輸入行程名稱');
 
   const editId = document.getElementById('schId').value;
   const data = {
+    action: 'saveSchedule',
     id: editId || ('sch_' + Date.now()),
     day: document.getElementById('schDay').value,
     time: document.getElementById('schTime').value,
@@ -590,14 +615,21 @@ function saveSchedule() {
   localStorage.setItem('japan_schedules', JSON.stringify(schedules));
   renderSchedule();
   closeModal('modalSchedule');
+
+  document.getElementById('syncStatus').innerText = '☁️ 正在同步行程...';
+  try {
+    await fetch(API_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+    document.getElementById('syncStatus').innerText = '☁️ 已同步至 Google Sheet';
+  } catch (e) { document.getElementById('syncStatus').innerText = '⚠️ 同步失敗 (已存本機)'; }
 }
 
-function saveNoteItem() {
+async function saveNoteItem() {
   const title = document.getElementById('noteTitle').value.trim();
   if (!title) return alert('請輸入名稱');
 
   const editId = document.getElementById('noteId').value;
   const data = {
+    action: 'saveNote',
     id: editId || ('note_' + Date.now()),
     cat: document.getElementById('noteCat').value,
     title: title,
@@ -614,9 +646,14 @@ function saveNoteItem() {
   localStorage.setItem('japan_notes', JSON.stringify(notesList));
   renderNotes();
   closeModal('modalNote');
+
+  document.getElementById('syncStatus').innerText = '☁️ 正在同步筆記...';
+  try {
+    await fetch(API_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+    document.getElementById('syncStatus').innerText = '☁️ 已同步至 Google Sheet';
+  } catch (e) { document.getElementById('syncStatus').innerText = '⚠️ 同步失敗 (已存本機)'; }
 }
 
-/* 刪除資料 */
 function deleteSchedule(id) {
   if (!confirm('確定刪除此行程？')) return;
   schedules = schedules.filter(s => s.id !== id);
@@ -652,7 +689,6 @@ function filterByDay(day, btn) {
   renderRecords();
 }
 
-/* 渲染頁面內容 */
 function renderAll() {
   renderSummary();
   renderSchedule();
@@ -708,18 +744,28 @@ function renderSchedule() {
 
   if (!list.length) return container.innerHTML = '<div class="empty">此天數暫無行程安排，點擊右下角「+」即可新增！</div>';
 
-  container.innerHTML = list.map(s => `
-    <div class="schedule-item">
-      <div class="schedule-time">${s.time}</div>
-      <div class="schedule-content">
-        <div class="schedule-title">${s.title}</div>
-        <div class="schedule-sub">${s.location || '暫無備註'}</div>
-        <div class="record-actions" style="margin-top:6px;">
-          <span class="delete-btn" onclick="deleteSchedule('${s.id}')">🗑️ 刪除</span>
+  list.sort((a,b) => a.time.localeCompare(b.time));
+
+  let html = '<div class="timeline">';
+  html += list.map(s => `
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-card">
+        <div class="timeline-header">
+          <span class="timeline-time">⏰ ${s.time}</span>
+          <div class="record-actions">
+            <span class="edit-btn" onclick="editSchedule('${s.id}')">✏️ 編輯</span>
+            <span class="delete-btn" onclick="deleteSchedule('${s.id}')">🗑️ 刪除</span>
+          </div>
         </div>
+        <div class="timeline-title">${s.title}</div>
+        ${s.location ? `<div class="timeline-location">📍 ${s.location}</div>` : ''}
       </div>
     </div>
   `).join('');
+  html += '</div>';
+
+  container.innerHTML = html;
 }
 
 function renderNotes() {
@@ -738,7 +784,7 @@ function renderNotes() {
       </div>
       <div class="record-meta">${n.remark || '暫無詳細內容'}</div>
       <div class="record-actions">
-        <span class="delete-btn" onclick="deleteNoteItem('${n.id}')">🗑️️ 刪除</span>
+        <span class="delete-btn" onclick="deleteNoteItem('${n.id}')">🗑 刪除</span>
       </div>
     </div>
   `).join('');
@@ -765,9 +811,6 @@ function renderRecords() {
       <div class="record-meta">
         ¥${Math.round(e.jpy).toLocaleString()} · ${e.cat} · ${e.pay}<br>
         ${e.person} 付款 · ${e.date}
-      </div>
-      <div class="record-actions">
-        <span class="delete-btn" onclick="deleteRecord('${e.id}')">🗑️ 刪除</span>
       </div>
     </div>
   `).join('');
