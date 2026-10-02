@@ -37,73 +37,74 @@
     
     header { background: var(--primary); color: white; padding: 18px 20px 14px; position: sticky; top: 0; z-index: 20; display: flex; justify-content: space-between; align-items: center; }
     header h1 { margin: 0; font-size: 19px; font-weight: 700; }
-    header p { margin: 3px 0 0; font-size: 11px; opacity: .8; }
-    .theme-btn { background: rgba(255,255,255,0.2); border: none; color: white; padding: 6px 10px; border-radius: 20px; font-size: 13px; cursor: pointer; }
+    .sync-status { font-size: 11px; opacity: .8; margin-top: 3px; }
+    .theme-btn { background: rgba(255,255,255,0.2); border: none; color: white; padding: 6px 12px; border-radius: 20px; font-size: 14px; cursor: pointer; }
 
-    .currency { background: var(--card-bg); margin: 12px 14px; padding: 14px 16px; border-radius: 16px; box-shadow: 0 3px 12px rgba(0,0,0,.04); border: 1px solid var(--border-color); }
-    .currency-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 12px; color: var(--text-sub); }
-    .currency-row { display: flex; gap: 8px; align-items: center; }
-    .currency input { width: 100%; border: 1px solid var(--border-color); border-radius: 10px; padding: 10px; font-size: 16px; background: var(--input-bg); color: var(--text-main); }
+    /* 🔍 放大後的即時換算區塊 */
+    .currency { background: var(--card-bg); margin: 14px; padding: 18px 20px; border-radius: 18px; box-shadow: 0 4px 16px rgba(0,0,0,.06); border: 1px solid var(--border-color); }
+    .currency-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 15px; font-weight: bold; color: var(--text-main); }
+    .currency-row { display: flex; gap: 10px; align-items: center; }
+    .currency input { width: 100%; border: 2px solid var(--border-color); border-radius: 12px; padding: 12px 14px; font-size: 20px; font-weight: bold; background: var(--input-bg); color: var(--text-main); }
+    .currency input:focus { border-color: var(--primary-light); }
+    .currency-arrow { font-size: 20px; color: var(--text-sub); font-weight: bold; }
     
-    .tabs { display: flex; background: var(--card-bg); border-bottom: 1px solid var(--border-color); position: sticky; top: 62px; z-index: 15; }
-    .tab { flex: 1; text-align: center; padding: 12px 4px; font-size: 14px; color: var(--text-sub); cursor: pointer; }
-    .tab.active { color: var(--primary-light); font-weight: bold; border-bottom: 3px solid var(--primary-light); }
-    
+    /* 📌 放大且帶 Icon 的 Tab 選單 */
+    .tabs { display: flex; background: var(--card-bg); border-bottom: 2px solid var(--border-color); position: sticky; top: 62px; z-index: 15; box-shadow: 0 2px 8px rgba(0,0,0,.03); }
+    .tab { flex: 1; text-align: center; padding: 14px 6px; font-size: 16px; font-weight: 600; color: var(--text-sub); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s; }
+    .tab.active { color: var(--primary-light); font-weight: 800; border-bottom: 4px solid var(--primary-light); font-size: 17px; background: rgba(97, 124, 109, 0.05); }
+    .tab-icon { font-size: 18px; }
+
     .page { display: none; padding: 14px; padding-bottom: 100px; }
     .page.active { display: block; }
     
     .card { background: var(--card-bg); border-radius: 18px; padding: 18px; margin-bottom: 14px; box-shadow: 0 3px 12px rgba(0,0,0,.04); border: 1px solid var(--border-color); }
-    .total-label { color: var(--text-sub); font-size: 12px; }
-    .total-hkd { font-size: 36px; font-weight: 800; margin-top: 4px; color: var(--text-main); }
-    .total-jpy { font-size: 14px; color: var(--text-sub); margin-top: 2px; }
+    .total-label { color: var(--text-sub); font-size: 13px; }
+    .total-hkd { font-size: 38px; font-weight: 800; margin-top: 4px; color: var(--text-main); }
+    .total-jpy { font-size: 15px; color: var(--text-sub); margin-top: 2px; }
     
     .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .mini { background: var(--bg-color); border-radius: 13px; padding: 12px; }
-    .mini-label { font-size: 12px; color: var(--text-sub); margin-bottom: 4px; }
-    .mini-value { font-size: 16px; font-weight: 700; color: var(--text-main); }
+    .mini { background: var(--bg-color); border-radius: 13px; padding: 14px; }
+    .mini-label { font-size: 13px; color: var(--text-sub); margin-bottom: 4px; }
+    .mini-value { font-size: 18px; font-weight: 700; color: var(--text-main); }
     
     .day-filter { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 10px; -webkit-overflow-scrolling: touch; }
-    .day-btn { flex: 0 0 auto; padding: 7px 14px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; font-size: 12px; color: var(--text-sub); cursor: pointer; }
+    .day-btn { flex: 0 0 auto; padding: 8px 16px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; font-size: 13px; color: var(--text-sub); cursor: pointer; }
     .day-btn.active { background: var(--primary); color: white; border-color: var(--primary); font-weight: bold; }
     
-    .section-title { font-size: 14px; font-weight: 700; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+    .section-title { font-size: 15px; font-weight: 700; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
     .record { background: var(--card-bg); border-radius: 16px; padding: 14px; margin-bottom: 10px; border: 1px solid var(--border-color); }
     .record-top { display: flex; justify-content: space-between; align-items: flex-start; }
     .record-note { font-weight: 700; font-size: 15px; }
-    .record-amount { font-weight: 800; font-size: 16px; }
+    .record-amount { font-weight: 800; font-size: 17px; }
     .record-meta { margin-top: 6px; color: var(--text-sub); font-size: 12px; line-height: 1.6; }
     .delete { margin-top: 6px; color: #e53935; font-size: 12px; cursor: pointer; display: inline-block; }
     
-    .settlement-card { background: var(--accent-card); border: 1px dashed var(--primary-light); border-radius: 18px; padding: 16px; margin-top: 16px; }
-    .settlement-title { font-size: 14px; font-weight: bold; color: var(--primary-light); margin-bottom: 6px; }
-    .settlement-text { font-size: 13px; color: var(--text-main); }
-    .copy-btn { margin-top: 10px; padding: 8px 12px; background: var(--primary-light); color: white; border: none; border-radius: 10px; font-size: 12px; cursor: pointer; width: 100%; font-weight: bold; }
+    .settlement-card { background: var(--accent-card); border: 1px dashed var(--primary-light); border-radius: 18px; padding: 18px; margin-top: 16px; }
+    .settlement-title { font-size: 15px; font-weight: bold; color: var(--primary-light); margin-bottom: 8px; }
+    .settlement-text { font-size: 14px; color: var(--text-main); font-weight: 500; }
 
-    .fab { position: fixed; right: 20px; bottom: 22px; width: 58px; height: 58px; border-radius: 50%; background: var(--primary); color: white; border: none; font-size: 31px; box-shadow: 0 5px 18px rgba(0,0,0,.3); z-index: 30; cursor: pointer; }
-    .empty { text-align: center; color: var(--text-sub); padding: 40px 10px; font-size: 13px; }
+    .fab { position: fixed; right: 20px; bottom: 22px; width: 62px; height: 62px; border-radius: 50%; background: var(--primary); color: white; border: none; font-size: 34px; box-shadow: 0 5px 18px rgba(0,0,0,.3); z-index: 30; cursor: pointer; }
+    .empty { text-align: center; color: var(--text-sub); padding: 40px 10px; font-size: 14px; }
     
     .modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 100; align-items: flex-end; }
     .modal-bg.show { display: flex; }
     .modal { width: 100%; max-width: 650px; margin: auto; background: var(--bg-color); border-radius: 24px 24px 0 0; max-height: 92vh; overflow-y: auto; padding: 20px; }
     .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
     .close { font-size: 26px; color: var(--text-sub); cursor: pointer; }
-    label { display: block; font-size: 12px; color: var(--text-sub); margin: 12px 0 5px; }
+    label { display: block; font-size: 13px; color: var(--text-sub); margin: 12px 0 5px; }
     input, select, textarea { width: 100%; border: 1px solid var(--border-color); border-radius: 11px; padding: 11px; font-size: 15px; background: var(--card-bg); color: var(--text-main); outline: none; }
     
     .amount-box { background: var(--card-bg); padding: 14px; border-radius: 14px; border: 1px solid var(--border-color); }
     .amount-row { display: flex; gap: 8px; align-items: center; }
-    .amount-row input { font-size: 24px; font-weight: bold; }
+    .amount-row input { font-size: 26px; font-weight: bold; }
     .tax-btns { display: flex; gap: 6px; margin-top: 8px; }
-    .tax-btn { flex: 1; padding: 6px; background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 8px; font-size: 11px; color: var(--text-main); cursor: pointer; text-align: center; }
+    .tax-btn { flex: 1; padding: 8px; background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 8px; font-size: 12px; color: var(--text-main); cursor: pointer; text-align: center; font-weight: 600; }
     .rate-row { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 12px; color: var(--text-sub); }
     .rate-row input { width: 75px; padding: 4px; font-size: 12px; text-align: center; }
     
     .cat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-    .cat-chip { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 10px 4px; text-align: center; font-size: 12px; cursor: pointer; }
+    .cat-chip { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 12px 4px; text-align: center; font-size: 13px; cursor: pointer; }
     .cat-chip.selected { background: var(--primary); color: white; border-color: var(--primary); font-weight: bold; }
-
-    .tag-scroll { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; margin-top: 6px; }
-    .quick-tag { flex: 0 0 auto; padding: 5px 10px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 15px; font-size: 11px; cursor: pointer; color: var(--text-sub); }
 
     .two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .people { display: flex; gap: 8px; }
@@ -113,7 +114,6 @@
     
     .loading { position: fixed; inset: 0; background: rgba(0,0,0,.4); color: white; display: none; align-items: center; justify-content: center; z-index: 200; font-weight: bold; }
     .loading.show { display: flex; }
-    .sync-status { font-size: 11px; opacity: .8; }
   </style>
 </head>
 <body>
@@ -124,26 +124,35 @@
       <h1>Walter & Cherry｜日本之旅 🇯🇵</h1>
       <div class="sync-status" id="syncStatus">☁️ 正在載入...</div>
     </div>
-    <button class="theme-btn" onclick="toggleTheme()">🌙/☀️</button>
+    <button class="theme-btn" onclick="toggleTheme()">🌙 / ☀️</button>
   </header>
 
-  <!-- 換算計算器 -->
+  <!-- 🔍 放大版即時換算區 -->
   <div class="currency">
     <div class="currency-header">
-      <span>💴 即時換算</span>
-      <span>基準匯率: <input id="baseRate" type="number" step="0.0001" value="0.0497" style="width:60px; padding:2px; font-size:11px;" onchange="updateCalcRate()"></span>
+      <span>💴 即時匯率換算</span>
+      <span style="font-size:12px; font-weight:normal; color:var(--text-sub);">
+        匯率: <input id="baseRate" type="number" step="0.0001" value="0.0497" style="width:65px; padding:2px; font-size:12px;" onchange="updateCalcRate()">
+      </span>
     </div>
     <div class="currency-row">
-      <input id="calcJPY" type="number" inputmode="decimal" placeholder="日圓 (JPY)" oninput="calcFromJPY()">
-      <span>→</span>
-      <input id="calcHKD" type="number" inputmode="decimal" placeholder="港幣 (HKD)" oninput="calcFromHKD()">
+      <input id="calcJPY" type="number" inputmode="decimal" placeholder="日圓 JPY" oninput="calcFromJPY()">
+      <span class="currency-arrow">→</span>
+      <input id="calcHKD" type="number" inputmode="decimal" placeholder="港幣 HKD" oninput="calcFromHKD()">
     </div>
   </div>
 
+  <!-- 📌 大字體 + Icon 的 Tab 選單 -->
   <div class="tabs">
-    <div class="tab active" onclick="showPage('summary', this)">總覽</div>
-    <div class="tab" onclick="showPage('records', this)">明細紀錄</div>
-    <div class="tab" onclick="showPage('stats', this)">圖表統計</div>
+    <div class="tab active" onclick="showPage('summary', this)">
+      <span class="tab-icon">🏠</span> 總覽
+    </div>
+    <div class="tab" onclick="showPage('records', this)">
+      <span class="tab-icon">📜</span> 明細紀錄
+    </div>
+    <div class="tab" onclick="showPage('stats', this)">
+      <span class="tab-icon">📊</span> 圖表統計
+    </div>
   </div>
 
   <!-- 頁面 1：總覽 -->
@@ -162,11 +171,10 @@
       </div>
     </div>
 
-    <!-- 收納在底部的結算與 WhatsApp 一鍵複製 -->
+    <!-- 簡潔的對帳結算區 -->
     <div class="settlement-card">
       <div class="settlement-title">🤝 旅程結算帳單</div>
       <div class="settlement-text" id="settlement">計算中...</div>
-      <button class="copy-btn" onclick="copySettlementText()">📋 一鍵複製 WhatsApp 結算文字</button>
     </div>
   </section>
 
@@ -181,19 +189,15 @@
       <button class="day-btn" onclick="filterByDay('Day 5', this)">Day 5</button>
       <button class="day-btn" onclick="filterByDay('事前/其他', this)">事前/其他</button>
     </div>
-    <div id="daySummary" style="font-size:12px; color:var(--text-sub); margin-bottom:10px; padding-left:4px;"></div>
+    <div id="daySummary" style="font-size:13px; font-weight:600; color:var(--text-sub); margin-bottom:12px; padding-left:4px;"></div>
     <div id="recordList"></div>
   </section>
 
-  <!-- 頁面 3：專業圖表統計 -->
+  <!-- 頁面 3：圖表統計 -->
   <section id="stats" class="page">
     <div class="card">
       <div class="section-title">📊 分類比例圓餅圖</div>
       <div id="chartCategory" style="min-height: 250px;"></div>
-    </div>
-    <div class="card">
-      <div class="section-title">💳 付款方式統計</div>
-      <div id="paymentStats"></div>
     </div>
   </section>
 </div>
@@ -209,7 +213,7 @@
     <div class="amount-box">
       <div class="amount-row">
         <input id="amount" type="number" step="0.01" inputmode="decimal" placeholder="金額" autofocus>
-        <select id="currencyType" style="width:90px;" onchange="updateConversion()">
+        <select id="currencyType" style="width:95px;" onchange="updateConversion()">
           <option value="JPY">JPY ¥</option>
           <option value="HKD">HKD $</option>
         </select>
@@ -234,7 +238,7 @@
       <div class="cat-chip" onclick="selectCat('🚆 交通', this)">🚆 交通</div>
       <div class="cat-chip" onclick="selectCat('🏨 住宿', this)">🏨 住宿</div>
       <div class="cat-chip" onclick="selectCat('🎫 景點', this)">🎫 景點</div>
-      <div class="cat-chip" onclick="selectCat('✈️ 機票', this)">✈️️ 機票</div>
+      <div class="cat-chip" onclick="selectCat('✈️ 機票', this)">✈ 機票</div>
       <div class="cat-chip" onclick="selectCat('📦 其他', this)">📦 其他</div>
     </div>
 
@@ -267,16 +271,8 @@
       <div class="choice" data-person="Cherry" onclick="selectPerson(this)">Cherry</div>
     </div>
 
-    <label>備註 (可點選快捷標籤)</label>
+    <label>備註</label>
     <textarea id="note" placeholder="項目說明..."></textarea>
-    <div class="tag-scroll">
-      <div class="quick-tag" onclick="addTag('7-11')">🏪 7-11</div>
-      <div class="quick-tag" onclick="addTag('FamilyMart')">🏪 FamilyMart</div>
-      <div class="quick-tag" onclick="addTag('大國藥妝')">💊 大國藥妝</div>
-      <div class="quick-tag" onclick="addTag('唐吉訶德')">🐧 唐吉訶德</div>
-      <div class="quick-tag" onclick="addTag('Suica加值')">🐧 Suica加值</div>
-      <div class="quick-tag" onclick="addTag('一蘭拉麵')">🍜 一蘭拉麵</div>
-    </div>
 
     <button class="save" id="saveButton" onclick="saveExpense()">儲存支出</button>
   </div>
@@ -305,7 +301,7 @@ function toggleTheme() {
   document.documentElement.setAttribute('data-theme', target);
 }
 
-// 💱 自動抓取最新即時匯率
+// 💱 自動抓取即時匯率
 async function fetchExchangeRate() {
   try {
     const res = await fetch('https://open.er-api.com/v6/latest/JPY');
@@ -389,12 +385,6 @@ function selectPerson(el) {
   selectedPerson = el.dataset.person;
 }
 
-function addTag(tag) {
-  const noteEl = document.getElementById('note');
-  noteEl.value = noteEl.value ? `${noteEl.value} ${tag}` : tag;
-}
-
-// 📴 離線 LocalStorage 優先讀寫
 function loadLocalExpenses() {
   const local = localStorage.getItem('japan_expenses');
   if (local) {
@@ -420,7 +410,7 @@ async function saveExpense() {
   const amount = Number(document.getElementById('amount').value);
   if (!amount || amount <= 0) return alert('請輸入有效金額');
 
-  if (navigator.vibrate) navigator.vibrate(50); // 震動反饋
+  if (navigator.vibrate) navigator.vibrate(50);
 
   const currency = document.getElementById('currencyType').value;
   const rate = Number(document.getElementById('itemRate').value) || 0.0497;
@@ -443,7 +433,6 @@ async function saveExpense() {
     note: fullNote
   };
 
-  // 本機先存，體驗零延遲
   expenses.unshift(data);
   localStorage.setItem('japan_expenses', JSON.stringify(expenses));
   renderAll();
@@ -452,11 +441,10 @@ async function saveExpense() {
   document.getElementById('amount').value = '';
   document.getElementById('note').value = '';
 
-  // 背景上傳去 GAS
   try {
     await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'add', data }) });
     syncWithServer();
-  } catch (e) { console.log('離線儲存，連線時將會同步'); }
+  } catch (e) {}
 }
 
 async function deleteRecord(id) {
@@ -508,21 +496,6 @@ function renderSummary() {
   }
 }
 
-function copySettlementText() {
-  let totalHKD = expenses.reduce((s, e) => s + Number(e.hkd || 0), 0);
-  let walter = expenses.filter(e => e.person === 'Walter').reduce((s, e) => s + Number(e.hkd || 0), 0);
-  let cherry = expenses.filter(e => e.person === 'Cherry').reduce((s, e) => s + Number(e.hkd || 0), 0);
-  let diff = walter - (totalHKD / 2);
-
-  let text = `🇯🇵 *Walter & Cherry 日本之旅結算帳單*\n------------------------\n💰 總花費：HK$${formatNumber(totalHKD)}\n👤 Walter 已付：HK$${formatNumber(walter)}\n👤 Cherry 已付：HK$${formatNumber(cherry)}\n------------------------\n🤝 *結算結果*：\n`;
-  if (Math.abs(diff) < 0.01) text += `雙方支出完全相等！🎉`;
-  else if (diff > 0) text += `Cherry 需給 Walter *HK$${formatNumber(diff)}*`;
-  else text += `Walter 需給 Cherry *HK$${formatNumber(Math.abs(diff))}*`;
-
-  navigator.clipboard.writeText(text);
-  alert('已複製結算帳單！可以直接貼去 WhatsApp / LINE 頻道！');
-}
-
 function renderRecords() {
   const container = document.getElementById('recordList');
   let list = expenses;
@@ -551,7 +524,6 @@ function renderRecords() {
   `).join('');
 }
 
-// 📊 繪製 ApexCharts 圓餅圖
 function renderChart() {
   const cats = {};
   expenses.forEach(e => cats[e.cat] = (cats[e.cat] || 0) + Number(e.hkd || 0));
@@ -564,7 +536,7 @@ function renderChart() {
   const options = {
     series: series,
     labels: labels,
-    chart: { type: 'donut', height: 260 },
+    chart: { type: 'donut', height: 270 },
     legend: { position: 'bottom' },
     dataLabels: { enabled: true, formatter: (val) => val.toFixed(0) + '%' }
   };
