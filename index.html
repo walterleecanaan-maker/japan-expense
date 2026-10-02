@@ -135,7 +135,6 @@
     </div>
     <button class="theme-btn" onclick="toggleTheme()">🌙 / ☀️</button>
   </header>
-
   <div class="currency">
     <div class="currency-header">
       <span>💴 即時匯率換算</span>
@@ -149,7 +148,6 @@
       <input id="calcHKD" type="number" inputmode="decimal" placeholder="港幣 HKD" oninput="calcFromHKD()">
     </div>
   </div>
-
   <div class="tabs">
     <div class="tab active" onclick="showPage('summary', this)"><span class="tab-icon">🏠</span>總覽</div>
     <div class="tab" onclick="showPage('schedule', this)"><span class="tab-icon">📅</span>行程表</div>
@@ -157,7 +155,6 @@
     <div class="tab" onclick="showPage('records', this)"><span class="tab-icon">📜</span>記帳明細</div>
     <div class="tab" onclick="showPage('stats', this)"><span class="tab-icon">📊</span>圖表</div>
   </div>
-
   <section id="summary" class="page active">
     <div class="card">
       <div class="total-label">全行程總支出</div>
@@ -187,7 +184,6 @@
       <div class="settlement-text" id="settlement">計算中...</div>
     </div>
   </section>
-
   <section id="schedule" class="page">
     <div class="day-filter">
       <button class="day-btn active" onclick="filterSchedule('Day 1', this)">Day 1</button>
@@ -198,7 +194,6 @@
     </div>
     <div id="scheduleList"></div>
   </section>
-
   <section id="notes" class="page">
     <div class="day-filter">
       <button class="day-btn active" onclick="filterNotes('ALL', this)">全部</button>
@@ -209,7 +204,6 @@
     </div>
     <div id="notesList"></div>
   </section>
-
   <section id="records" class="page">
     <div class="day-filter">
       <button class="day-btn active" onclick="filterByDay('ALL', this)">全部</button>
@@ -223,7 +217,6 @@
     <div id="daySummary" style="font-size:13px; font-weight:600; color:var(--text-sub); margin-bottom:12px; padding-left:4px;"></div>
     <div id="recordList"></div>
   </section>
-
   <section id="stats" class="page">
     <div class="card">
       <div class="section-title">📊 分類比例圓餅圖</div>
@@ -231,9 +224,7 @@
     </div>
   </section>
 </div>
-
 <button class="fab" id="fabBtn" onclick="handleFabClick()">+</button>
-
 <!-- 記帳 Modal -->
 <div class="modal-bg" id="modalExpense">
   <div class="modal">
@@ -298,7 +289,6 @@
     <button class="save" onclick="saveExpense()">儲存支出</button>
   </div>
 </div>
-
 <!-- 行程 Modal -->
 <div class="modal-bg" id="modalSchedule">
   <div class="modal">
@@ -319,7 +309,6 @@
     <button class="save" onclick="saveSchedule()">儲存行程</button>
   </div>
 </div>
-
 <!-- 備忘/必去 Modal -->
 <div class="modal-bg" id="modalNote">
   <div class="modal">
@@ -328,7 +317,7 @@
     <label>類別</label>
     <select id="noteCat">
       <option value="🍜 美食">🍜 美食</option>
-      <option value="🛍️ 必買">🛍️️ 必買</option>
+      <option value="🛍️ 必買">🛍 必買</option>
       <option value="🎫 景點">🎫 景點</option>
       <option value="📝 筆記">📝 筆記</option>
     </select>
@@ -339,7 +328,6 @@
     <button class="save" onclick="saveNoteItem()">儲存筆記</button>
   </div>
 </div>
-
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycbyGC_wo7E5jVk-O-GVd_38BLGn6r13uxMKy265hyOt6SjeGwv4WdK-3EDE_LwBa4efpEw/exec';
 const TARGET_PER_PERSON = 10000;
@@ -439,7 +427,6 @@ function editExpense(id) {
   if (item) openExpenseModal(item);
 }
 
-// 修正：補上 schId 賦值，修復編輯行程 Bug
 function openScheduleModal(data = null) {
   if (data) {
     document.getElementById('schModalTitle').innerText = '編輯行程';
@@ -464,7 +451,6 @@ function editSchedule(id) {
   if (item) openScheduleModal(item);
 }
 
-// 修正：補上筆記編輯功能
 function openNoteModal(data = null) {
   if (data) {
     document.getElementById('noteModalTitle').innerText = '編輯口袋名單 / 筆記';
@@ -567,7 +553,6 @@ async function syncWithServer() {
 
 /* 儲存資料與發送 POST */
 async function postData(payload) {
-  // 移除 mode: 'no-cors' 以防靜默失敗
   return fetch(API_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -599,14 +584,12 @@ async function saveExpense() {
     kind: dayTag,
     note: `[${dayTag}] ${noteRaw}`
   };
-
   if (editId) {
     const idx = expenses.findIndex(e => e.id === editId);
     if (idx !== -1) expenses[idx] = data;
   } else {
     expenses.unshift(data);
   }
-
   localStorage.setItem('japan_expenses', JSON.stringify(expenses));
   renderAll();
   closeModal('modalExpense');
@@ -630,19 +613,16 @@ async function saveSchedule() {
     title: title,
     location: document.getElementById('schLocation').value.trim()
   };
-
   if (editId) {
     const idx = schedules.findIndex(s => s.id === editId);
     if (idx !== -1) schedules[idx] = data;
   } else {
     schedules.push(data);
   }
-
   schedules.sort((a,b) => a.time.localeCompare(b.time));
   localStorage.setItem('japan_schedules', JSON.stringify(schedules));
   renderSchedule();
   closeModal('modalSchedule');
-
   document.getElementById('syncStatus').innerText = '☁️ 正在同步行程...';
   try {
     await postData(data);
@@ -661,18 +641,15 @@ async function saveNoteItem() {
     title: title,
     remark: document.getElementById('noteRemark').value.trim()
   };
-
   if (editId) {
     const idx = notesList.findIndex(n => n.id === editId);
     if (idx !== -1) notesList[idx] = data;
   } else {
     notesList.unshift(data);
   }
-
   localStorage.setItem('japan_notes', JSON.stringify(notesList));
   renderNotes();
   closeModal('modalNote');
-
   document.getElementById('syncStatus').innerText = '☁️ 正在同步筆記...';
   try {
     await postData(data);
@@ -780,13 +757,25 @@ function renderSummary() {
   }
 }
 
+/* 導航輔助函式 */
+function getNavUrl(text) {
+  if (!text) return '';
+  const trimmed = text.trim();
+  if (/^https?:\/\//i.test(trimmed)) {
+    return trimmed;
+  }
+  return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(trimmed)}`;
+}
+
 function renderSchedule() {
   const container = document.getElementById('scheduleList');
   const list = schedules.filter(s => s.day === currentSchFilter);
   if (!list.length) return container.innerHTML = '<div class="empty">此天數暫無行程安排，點擊右下角「+」即可新增！</div>';
   list.sort((a,b) => String(a.time).localeCompare(String(b.time)));
   let html = '<div class="timeline">';
-  html += list.map(s => `
+  html += list.map(s => {
+    const navUrl = s.location ? getNavUrl(s.location) : '';
+    return `
     <div class="timeline-item">
       <div class="timeline-dot"></div>
       <div class="timeline-card">
@@ -799,9 +788,17 @@ function renderSchedule() {
         </div>
         <div class="timeline-title">${s.title}</div>
         ${s.location ? `<div class="timeline-location">📍 ${s.location}</div>` : ''}
+        ${navUrl ? `
+          <div style="margin-top: 10px;">
+            <a href="${navUrl}" target="_blank" rel="noopener noreferrer" 
+               style="display: inline-block; padding: 6px 12px; background: var(--primary); color: white; text-decoration: none; border-radius: 8px; font-size: 12px; font-weight: bold;">
+               🗺️ 導航 / 路線
+            </a>
+          </div>
+        ` : ''}
       </div>
     </div>
-  `).join('');
+  `}).join('');
   html += '</div>';
   container.innerHTML = html;
 }
@@ -813,18 +810,30 @@ function renderNotes() {
     list = notesList.filter(n => n.cat === currentNoteFilter);
   }
   if (!list.length) return container.innerHTML = '<div class="empty">暫無口袋名單或筆記，點擊右下角「+」新增！</div>';
-  container.innerHTML = list.map(n => `
+  container.innerHTML = list.map(n => {
+    const targetText = n.remark || n.title;
+    const navUrl = getNavUrl(targetText);
+    
+    return `
     <div class="record">
       <div class="record-top">
         <div class="record-note">${n.cat} · ${n.title}</div>
       </div>
       <div class="record-meta">${n.remark || '暫無詳細內容'}</div>
-      <div class="record-actions">
-        <span class="edit-btn" onclick="editNoteItem('${n.id}')">✏️ 編輯</span>
-        <span class="delete-btn" onclick="deleteNoteItem('${n.id}')">🗑️ 刪除</span>
+      <div class="record-actions" style="justify-content: space-between; align-items: center;">
+        <div>
+          <span class="edit-btn" onclick="editNoteItem('${n.id}')">✏️ 編輯</span>
+          <span class="delete-btn" onclick="deleteNoteItem('${n.id}')" style="margin-left: 10px;">🗑️️ 刪除</span>
+        </div>
+        ${navUrl ? `
+          <a href="${navUrl}" target="_blank" rel="noopener noreferrer" 
+             style="display: inline-block; padding: 5px 10px; background: var(--primary); color: white; text-decoration: none; border-radius: 8px; font-size: 12px; font-weight: bold;">
+             🗺️️ 導航
+          </a>
+        ` : ''}
       </div>
     </div>
-  `).join('');
+  `}).join('');
 }
 
 function renderRecords() {
