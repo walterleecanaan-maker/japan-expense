@@ -9,105 +9,147 @@
     body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", sans-serif; background: #f6f4ef; color: #333; }
     .app { max-width: 650px; margin: auto; min-height: 100vh; background: #f6f4ef; }
     header { background: #263b32; color: white; padding: 22px 20px 18px; position: sticky; top: 0; z-index: 20; }
-    header h1 { margin: 0; font-size: 21px; font-weight: 700; }
-    header p { margin: 5px 0 0; font-size: 12px; opacity: .75; }
-    .currency { background: white; margin: 14px; padding: 16px; border-radius: 16px; box-shadow: 0 3px 12px rgba(0,0,0,.06); }
-    .currency-title { font-size: 13px; color: #777; margin-bottom: 10px; }
+    header h1 { margin: 0; font-size: 20px; font-weight: 700; }
+    header p { margin: 4px 0 0; font-size: 12px; opacity: .75; }
+    
+    .currency { background: white; margin: 12px 14px; padding: 14px 16px; border-radius: 16px; box-shadow: 0 3px 12px rgba(0,0,0,.05); }
+    .currency-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 13px; color: #666; }
     .currency-row { display: flex; gap: 8px; align-items: center; }
-    .currency input { width: 100%; border: 1px solid #ddd; border-radius: 10px; padding: 12px; font-size: 17px; }
+    .currency input { width: 100%; border: 1px solid #ddd; border-radius: 10px; padding: 10px; font-size: 16px; }
+    
     .tabs { display: flex; background: white; border-bottom: 1px solid #eee; position: sticky; top: 72px; z-index: 15; }
-    .tab { flex: 1; text-align: center; padding: 14px 4px; font-size: 14px; color: #888; cursor: pointer; }
+    .tab { flex: 1; text-align: center; padding: 13px 4px; font-size: 14px; color: #888; cursor: pointer; }
     .tab.active { color: #263b32; font-weight: bold; border-bottom: 3px solid #263b32; }
+    
     .page { display: none; padding: 14px; padding-bottom: 100px; }
     .page.active { display: block; }
-    .card { background: white; border-radius: 18px; padding: 18px; margin-bottom: 14px; box-shadow: 0 3px 12px rgba(0,0,0,.05); }
+    
+    .card { background: white; border-radius: 18px; padding: 18px; margin-bottom: 14px; box-shadow: 0 3px 12px rgba(0,0,0,.04); }
     .total-label { color: #888; font-size: 13px; }
-    .total-hkd { font-size: 38px; font-weight: 800; margin-top: 4px; color: #263b32; }
+    .total-hkd { font-size: 36px; font-weight: 800; margin-top: 4px; color: #263b32; }
     .total-jpy { font-size: 15px; color: #888; margin-top: 2px; }
+    
     .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .mini { background: #f8f8f8; border-radius: 13px; padding: 13px; }
     .mini-label { font-size: 12px; color: #888; margin-bottom: 5px; }
-    .mini-value { font-size: 17px; font-weight: 700; }
-    .section-title { font-size: 15px; font-weight: 700; margin-bottom: 12px; }
-    .bar-row { margin-bottom: 12px; }
-    .bar-label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 5px; }
-    .bar-bg { height: 7px; background: #eee; border-radius: 10px; overflow: hidden; }
-    .bar { height: 100%; background: #617c6d; border-radius: 10px; }
+    .mini-value { font-size: 17px; font-weight: 700; color: #263b32; }
+    
+    /* 天數篩選列 */
+    .day-filter { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 10px; -webkit-overflow-scrolling: touch; }
+    .day-btn { flex: 0 0 auto; padding: 8px 14px; background: #e8e6e1; border-radius: 20px; font-size: 13px; color: #555; cursor: pointer; border: none; }
+    .day-btn.active { background: #263b32; color: white; font-weight: bold; }
+    
+    .section-title { font-size: 15px; font-weight: 700; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
     .record { background: white; border-radius: 16px; padding: 15px; margin-bottom: 10px; box-shadow: 0 2px 9px rgba(0,0,0,.04); }
     .record-top { display: flex; justify-content: space-between; align-items: flex-start; }
     .record-note { font-weight: 700; font-size: 15px; }
     .record-amount { font-weight: 800; color: #263b32; font-size: 17px; }
     .record-meta { margin-top: 7px; color: #888; font-size: 12px; line-height: 1.7; }
     .delete { margin-top: 8px; color: #b55; font-size: 12px; cursor: pointer; display: inline-block; }
+    
+    /* 清算小幫手 (收納在底部) */
+    .settlement-card { background: #f0f4f1; border: 1px dashed #263b32; border-radius: 18px; padding: 16px; margin-top: 20px; }
+    .settlement-title { font-size: 14px; font-weight: bold; color: #263b32; margin-bottom: 6px; }
+    .settlement-text { font-size: 14px; color: #444; }
+    
     .fab { position: fixed; right: 20px; bottom: 22px; width: 58px; height: 58px; border-radius: 50%; background: #263b32; color: white; border: none; font-size: 31px; box-shadow: 0 5px 18px rgba(0,0,0,.22); z-index: 30; cursor: pointer; }
     .empty { text-align: center; color: #999; padding: 40px 10px; font-size: 14px; }
+    
     .modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 100; align-items: flex-end; }
     .modal-bg.show { display: flex; }
     .modal { width: 100%; max-width: 650px; margin: auto; background: #f8f7f3; border-radius: 24px 24px 0 0; max-height: 92vh; overflow-y: auto; padding: 20px; }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
     .close { font-size: 28px; color: #888; cursor: pointer; }
-    label { display: block; font-size: 12px; color: #777; margin: 13px 0 6px; }
-    input, select, textarea { width: 100%; border: 1px solid #ddd; border-radius: 11px; padding: 12px; font-size: 16px; background: white; outline: none; }
+    label { display: block; font-size: 12px; color: #777; margin: 12px 0 5px; }
+    input, select, textarea { width: 100%; border: 1px solid #ddd; border-radius: 11px; padding: 11px; font-size: 15px; background: white; outline: none; }
+    
     .amount-box { background: #fff; padding: 14px; border-radius: 14px; }
-    .amount-row { display: flex; gap: 10px; align-items: center; }
+    .amount-row { display: flex; gap: 8px; align-items: center; }
     .amount-row input { font-size: 22px; font-weight: bold; }
-    .converted { margin-top: 7px; color: #888; font-size: 12px; }
+    .rate-row { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 12px; color: #777; }
+    .rate-row input { width: 80px; padding: 5px; font-size: 12px; text-align: center; }
+    
     .two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .people { display: flex; gap: 8px; }
-    .choice { flex: 1; border: 1px solid #ddd; background: white; border-radius: 11px; padding: 12px; text-align: center; cursor: pointer; }
+    .choice { flex: 1; border: 1px solid #ddd; background: white; border-radius: 11px; padding: 11px; text-align: center; cursor: pointer; }
     .choice.selected { background: #263b32; color: white; border-color: #263b32; }
-    .save { width: 100%; margin-top: 18px; padding: 15px; border: none; border-radius: 13px; background: #263b32; color: white; font-size: 16px; font-weight: bold; cursor: pointer; }
-    .save:disabled { opacity: .5; }
+    .save { width: 100%; margin-top: 18px; padding: 14px; border: none; border-radius: 13px; background: #263b32; color: white; font-size: 16px; font-weight: bold; cursor: pointer; }
+    
     .loading { position: fixed; inset: 0; background: rgba(255,255,255,.7); display: none; align-items: center; justify-content: center; z-index: 200; font-weight: bold; }
     .loading.show { display: flex; }
-    .sync-status { font-size: 11px; opacity: .65; margin-top: 5px; }
+    .sync-status { font-size: 11px; opacity: .65; margin-top: 4px; }
+    .bar-row { margin-bottom: 10px; }
+    .bar-label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px; }
+    .bar-bg { height: 7px; background: #eee; border-radius: 10px; overflow: hidden; }
+    .bar { height: 100%; background: #617c6d; border-radius: 10px; }
   </style>
 </head>
 <body>
 
 <div class="app">
   <header>
-    <h1>Walter & Cherry｜日本旅行記帳</h1>
+    <h1>Walter & Cherry｜日本之旅 🇯🇵</h1>
     <p>Japan Trip Expense Tracker</p>
-    <div class="sync-status" id="syncStatus">☁️ 正在同步</div>
+    <div class="sync-status" id="syncStatus">☁️ 正在同步...</div>
   </header>
 
+  <!-- 頂部匯率計算器 -->
   <div class="currency">
-    <div class="currency-title">💴 JPY ↔ HKD 匯率計算</div>
+    <div class="currency-header">
+      <span>💴 換算計算器</span>
+      <span>匯率: <input id="baseRate" type="number" step="0.0001" value="0.0497" style="width:65px; padding:2px 4px; font-size:12px;" onchange="updateCalcRate()"></span>
+    </div>
     <div class="currency-row">
-      <input id="calcJPY" type="number" placeholder="日圓" oninput="calcFromJPY()">
+      <input id="calcJPY" type="number" placeholder="日圓 (JPY)" oninput="calcFromJPY()">
       <span>→</span>
-      <input id="calcHKD" type="number" placeholder="港幣" oninput="calcFromHKD()">
+      <input id="calcHKD" type="number" placeholder="港幣 (HKD)" oninput="calcFromHKD()">
     </div>
   </div>
 
   <div class="tabs">
     <div class="tab active" onclick="showPage('summary', this)">總覽</div>
-    <div class="tab" onclick="showPage('records', this)">紀錄</div>
-    <div class="tab" onclick="showPage('stats', this)">統計</div>
+    <div class="tab" onclick="showPage('records', this)">明細紀錄</div>
+    <div class="tab" onclick="showPage('stats', this)">支出統計</div>
   </div>
 
+  <!-- 頁面 1：總覽 -->
   <section id="summary" class="page active">
     <div class="card">
-      <div class="total-label">目前總支出</div>
+      <div class="total-label">全行程總支出</div>
       <div class="total-hkd" id="totalHKD">HK$0.00</div>
       <div class="total-jpy" id="totalJPY">¥0</div>
     </div>
+    
     <div class="card">
-      <div class="section-title">👥 付款</div>
+      <div class="section-title">👥 付款紀錄</div>
       <div class="summary-grid">
         <div class="mini"><div class="mini-label">Walter 已付</div><div class="mini-value" id="walterPaid">HK$0.00</div></div>
         <div class="mini"><div class="mini-label">Cherry 已付</div><div class="mini-value" id="cherryPaid">HK$0.00</div></div>
       </div>
     </div>
-    <div class="card">
-      <div class="section-title">💰 AA 結算</div>
-      <div id="settlement">暫無紀錄</div>
+
+    <!-- 移至下方的結算提示 -->
+    <div class="settlement-card">
+      <div class="settlement-title">🤝 旅程結算參考</div>
+      <div class="settlement-text" id="settlement">計算中...</div>
     </div>
   </section>
 
-  <section id="records" class="page"><div id="recordList"></div></section>
+  <!-- 頁面 2：明細紀錄（支援按天數篩選） -->
+  <section id="records" class="page">
+    <div class="day-filter">
+      <button class="day-btn active" onclick="filterByDay('ALL', this)">全部</button>
+      <button class="day-btn" onclick="filterByDay('Day 1', this)">Day 1</button>
+      <button class="day-btn" onclick="filterByDay('Day 2', this)">Day 2</button>
+      <button class="day-btn" onclick="filterByDay('Day 3', this)">Day 3</button>
+      <button class="day-btn" onclick="filterByDay('Day 4', this)">Day 4</button>
+      <button class="day-btn" onclick="filterByDay('Day 5', this)">Day 5</button>
+    </div>
+    <div id="daySummary" style="font-size:12px; color:#666; margin-bottom:10px; padding-left:4px;"></div>
+    <div id="recordList"></div>
+  </section>
 
+  <!-- 頁面 3：統計 -->
   <section id="stats" class="page">
     <div class="card"><div class="section-title">📊 分類支出</div><div id="categoryStats"></div></div>
     <div class="card"><div class="section-title">💳 付款方式</div><div id="paymentStats"></div></div>
@@ -116,24 +158,40 @@
 
 <button class="fab" onclick="openModal()">+</button>
 
+<!-- 新增支出 Modal -->
 <div class="modal-bg" id="modalBg">
   <div class="modal">
     <div class="modal-header"><h2>新增支出</h2><div class="close" onclick="closeModal()">×</div></div>
-    <label>金額</label>
+    
+    <label>金額與貨幣</label>
     <div class="amount-box">
       <div class="amount-row">
         <input id="amount" type="number" step="0.01" placeholder="輸入金額">
-        <select id="currencyType" onchange="updateConversion()">
-          <option value="JPY">JPY</option>
-          <option value="HKD">HKD</option>
+        <select id="currencyType" style="width:100px;" onchange="updateConversion()">
+          <option value="JPY">JPY ¥</option>
+          <option value="HKD">HKD $</option>
         </select>
       </div>
-      <div class="converted" id="converted">約 HK$0.00</div>
+      <div class="rate-row">
+        <span>自訂匯率：</span>
+        <input id="itemRate" type="number" step="0.0001" value="0.0497" oninput="updateConversion()">
+        <span id="convertedText" style="margin-left:auto; font-weight:bold; color:#263b32;">約 HK$0.00</span>
+      </div>
     </div>
 
     <div class="two">
+      <div>
+        <label>行程天數</label>
+        <select id="dayTag">
+          <option value="Day 1">Day 1</option>
+          <option value="Day 2">Day 2</option>
+          <option value="Day 3">Day 3</option>
+          <option value="Day 4">Day 4</option>
+          <option value="Day 5">Day 5</option>
+          <option value="事前/其他">事前/其他</option>
+        </select>
+      </div>
       <div><label>日期</label><input id="date" type="date"></div>
-      <div><label>時間</label><input id="time" type="time"></div>
     </div>
 
     <label>類別</label>
@@ -150,9 +208,10 @@
 
     <label>付款方式</label>
     <select id="paymentMethod">
+      <option value="💴 Cash (現金)">💴 Cash (現金)</option>
       <option value="💳 Mastercard">💳 Mastercard</option>
       <option value="💳 Visa">💳 Visa</option>
-      <option value="💴 Cash">💴 Cash</option>
+      <option value="🐧 Suica/PASMO">🐧 Suica/PASMO</option>
     </select>
 
     <label>誰付款？</label>
@@ -161,27 +220,22 @@
       <div class="choice" data-person="Cherry" onclick="selectPerson(this)">Cherry</div>
     </div>
 
-    <label>支出類型</label>
-    <select id="expenseType">
-      <option value="旅途中">旅途中</option>
-      <option value="事前已付">事前已付</option>
-    </select>
-
     <label>備註</label>
-    <textarea id="note" placeholder="備註..."></textarea>
+    <textarea id="note" placeholder="例如：築地市場海鮮丼 / 藥妝店..."></textarea>
 
     <button class="save" id="saveButton" onclick="saveExpense()">儲存支出</button>
   </div>
 </div>
 
-<div class="loading" id="loading">☁️ 同步中……</div>
+<div class="loading" id="loading">☁️ 資料同步中...</div>
 
 <script>
-// ⚠️ 請填入你從 GAS 部署獲得的 Exec URL
+// ⚠️️ 請填入你的 GAS Web App URL
 const API_URL = 'https://script.google.com/macros/s/AKfycbyGC_wo7E5jVk-O-GVd_38BLGn6r13uxMKy265hyOt6SjeGwv4WdK-3EDE_LwBa4efpEw/exec';
-const RATE = 0.0497;
+
 let expenses = [];
 let selectedPerson = 'Walter';
+let currentDayFilter = 'ALL';
 
 window.onload = loadExpenses;
 
@@ -196,21 +250,30 @@ function showPage(page, el) {
   el.classList.add('active');
 }
 
+function updateCalcRate() {
+  const r = document.getElementById('baseRate').value;
+  document.getElementById('itemRate').value = r;
+  calcFromJPY();
+}
+
 function calcFromJPY() {
+  const rate = Number(document.getElementById('baseRate').value) || 0.0497;
   const jpy = Number(document.getElementById('calcJPY').value) || 0;
-  document.getElementById('calcHKD').value = jpy ? (jpy * RATE).toFixed(2) : '';
+  document.getElementById('calcHKD').value = jpy ? (jpy * rate).toFixed(2) : '';
 }
 
 function calcFromHKD() {
+  const rate = Number(document.getElementById('baseRate').value) || 0.0497;
   const hkd = Number(document.getElementById('calcHKD').value) || 0;
-  document.getElementById('calcJPY').value = hkd ? (hkd / RATE).toFixed(0) : '';
+  document.getElementById('calcJPY').value = hkd ? (hkd / rate).toFixed(0) : '';
 }
 
 function openModal() {
   document.getElementById('modalBg').classList.add('show');
   const now = new Date();
   document.getElementById('date').value = now.toISOString().split('T')[0];
-  document.getElementById('time').value = now.toTimeString().split(' ')[0].substring(0, 5);
+  document.getElementById('itemRate').value = document.getElementById('baseRate').value;
+  updateConversion();
 }
 
 function closeModal() { document.getElementById('modalBg').classList.remove('show'); }
@@ -218,8 +281,10 @@ function closeModal() { document.getElementById('modalBg').classList.remove('sho
 function updateConversion() {
   const amount = Number(document.getElementById('amount').value) || 0;
   const currency = document.getElementById('currencyType').value;
-  let hkd = (currency === 'JPY') ? (amount * RATE) : amount;
-  document.getElementById('converted').innerText = `約 HK$${formatNumber(hkd)}`;
+  const rate = Number(document.getElementById('itemRate').value) || 0.0497;
+  
+  let hkd = (currency === 'JPY') ? (amount * rate) : amount;
+  document.getElementById('convertedText').innerText = `約 HK$${formatNumber(hkd)}`;
 }
 
 document.getElementById('amount').addEventListener('input', updateConversion);
@@ -231,7 +296,7 @@ function selectPerson(el) {
 }
 
 async function loadExpenses() {
-  document.getElementById('syncStatus').innerText = '☁️ 正在同步';
+  document.getElementById('syncStatus').innerText = '☁️ 正在同步...';
   try {
     const res = await fetch(API_URL);
     expenses = await res.json();
@@ -244,32 +309,37 @@ async function loadExpenses() {
 
 async function saveExpense() {
   const amount = Number(document.getElementById('amount').value);
-  if (!amount || amount <= 0) return alert('請輸入金額');
+  if (!amount || amount <= 0) return alert('請輸入有效金額');
 
   const currency = document.getElementById('currencyType').value;
-  const jpy = (currency === 'JPY') ? amount : (amount / RATE);
-  const hkd = (currency === 'JPY') ? (amount * RATE) : amount;
+  const rate = Number(document.getElementById('itemRate').value) || 0.0497;
+  
+  const jpy = (currency === 'JPY') ? amount : (amount / rate);
+  const hkd = (currency === 'JPY') ? (amount * rate) : amount;
+
+  const dayTag = document.getElementById('dayTag').value;
+  const noteRaw = document.getElementById('note').value.trim();
+  const fullNote = `[${dayTag}] ${noteRaw}`;
 
   const data = {
     date: document.getElementById('date').value,
-    time: document.getElementById('time').value,
+    time: new Date().toTimeString().substring(0, 5),
     jpy, hkd,
     cat: document.getElementById('category').value,
     pay: document.getElementById('paymentMethod').value,
     person: selectedPerson,
-    kind: document.getElementById('expenseType').value,
-    note: document.getElementById('note').value.trim()
+    kind: dayTag,
+    note: fullNote
   };
 
   document.getElementById('loading').classList.add('show');
 
   try {
-    await fetch(API_URL, {
-      method: 'POST',
-      body: JSON.stringify({ action: 'add', data })
-    });
+    await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'add', data }) });
     document.getElementById('loading').classList.remove('show');
     closeModal();
+    document.getElementById('amount').value = '';
+    document.getElementById('note').value = '';
     loadExpenses();
   } catch (e) {
     document.getElementById('loading').classList.remove('show');
@@ -278,19 +348,23 @@ async function saveExpense() {
 }
 
 async function deleteRecord(id) {
-  if (!confirm('確定刪除？')) return;
+  if (!confirm('確定要刪除這筆紀錄？')) return;
   document.getElementById('loading').classList.add('show');
   try {
-    await fetch(API_URL, {
-      method: 'POST',
-      body: JSON.stringify({ action: 'delete', id })
-    });
+    await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'delete', id }) });
     document.getElementById('loading').classList.remove('show');
     loadExpenses();
   } catch (e) {
     document.getElementById('loading').classList.remove('show');
     alert('刪除失敗');
   }
+}
+
+function filterByDay(day, btn) {
+  currentDayFilter = day;
+  document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderRecords();
 }
 
 function renderAll() {
@@ -315,15 +389,29 @@ function renderSummary() {
 
   const diff = walter - (totalHKD / 2);
   const settlementEl = document.getElementById('settlement');
-  if (Math.abs(diff) < 0.01) settlementEl.innerHTML = '雙方支出相等';
-  else if (diff > 0) settlementEl.innerHTML = `Cherry 需給 Walter <b>HK$${formatNumber(diff)}</b>`;
-  else settlementEl.innerHTML = `Walter 需給 Cherry <b>HK$${formatNumber(Math.abs(diff))}</b>`;
+  if (Math.abs(diff) < 0.01) {
+    settlementEl.innerHTML = '雙方目前支出完美平衡 ✨';
+  } else if (diff > 0) {
+    settlementEl.innerHTML = `Cherry 補回 <b>HK$${formatNumber(diff)}</b> 給 Walter 即可平分`;
+  } else {
+    settlementEl.innerHTML = `Walter 補回 <b>HK$${formatNumber(Math.abs(diff))}</b> 給 Cherry 即可平分`;
+  }
 }
 
 function renderRecords() {
   const container = document.getElementById('recordList');
-  if (!expenses.length) return container.innerHTML = '<div class="empty">無紀錄</div>';
-  container.innerHTML = expenses.map(e => `
+  let list = expenses;
+  
+  if (currentDayFilter !== 'ALL') {
+    list = expenses.filter(e => e.kind === currentDayFilter || (e.note && e.note.includes(`[${currentDayFilter}]`)));
+  }
+
+  const dayTotal = list.reduce((s, e) => s + Number(e.hkd || 0), 0);
+  document.getElementById('daySummary').innerText = `${currentDayFilter === 'ALL' ? '全部' : currentDayFilter} 共 ${list.length} 筆，小計 HK$${formatNumber(dayTotal)}`;
+
+  if (!list.length) return container.innerHTML = '<div class="empty">此天數暫無紀錄</div>';
+
+  container.innerHTML = list.map(e => `
     <div class="record">
       <div class="record-top">
         <div class="record-note">${e.note || e.cat}</div>
@@ -331,7 +419,7 @@ function renderRecords() {
       </div>
       <div class="record-meta">
         ¥${Math.round(e.jpy).toLocaleString()} · ${e.cat} · ${e.pay}<br>
-        ${e.person} 付款 (${e.kind}) · ${e.date} ${e.time}
+        ${e.person} 付款 · ${e.date}
       </div>
       <div class="delete" onclick="deleteRecord('${e.id}')">🗑️ 刪除</div>
     </div>
@@ -340,12 +428,21 @@ function renderRecords() {
 
 function renderStats() {
   const totalHKD = expenses.reduce((s, e) => s + Number(e.hkd || 0), 0) || 1;
-  const cats = {};
-  expenses.forEach(e => cats[e.cat] = (cats[e.cat] || 0) + Number(e.hkd || 0));
+  const cats = {}, pays = {};
+
+  expenses.forEach(e => {
+    cats[e.cat] = (cats[e.cat] || 0) + Number(e.hkd || 0);
+    pays[e.pay] = (pays[e.pay] || 0) + Number(e.hkd || 0);
+  });
 
   document.getElementById('categoryStats').innerHTML = Object.keys(cats).map(c => {
     const pct = Math.round((cats[c] / totalHKD) * 100);
     return `<div class="bar-row"><div class="bar-label"><span>${c}</span><span>HK$${formatNumber(cats[c])} (${pct}%)</span></div><div class="bar-bg"><div class="bar" style="width:${pct}%"></div></div></div>`;
+  }).join('');
+
+  document.getElementById('paymentStats').innerHTML = Object.keys(pays).map(p => {
+    const pct = Math.round((pays[p] / totalHKD) * 100);
+    return `<div class="bar-row"><div class="bar-label"><span>${p}</span><span>HK$${formatNumber(pays[p])} (${pct}%)</span></div><div class="bar-bg"><div class="bar" style="width:${pct}%"></div></div></div>`;
   }).join('');
 }
 </script>
